@@ -1,158 +1,114 @@
+// src/sections/quote/QuoteModal.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useModal } from "@/context/ModalContext";
 import { COUNTRY_CODES } from "@/data/countries";
-import { FiX, FiCheck, FiChevronDown, FiSearch } from "react-icons/fi";
+import {
+  FiX,
+  FiCheck,
+  FiChevronDown,
+  FiSearch,
+  FiAlertCircle,
+  FiUser,
+  FiMail,
+  FiPhone,
+  FiMapPin,
+  FiMessageSquare,
+  FiBriefcase,
+  FiTag,
+} from "react-icons/fi";
 import { RiSendPlaneLine } from "react-icons/ri";
+import Select from "react-select";
+import { submitContactForm } from "@/services/contact.service";
+import Modal from "@/components/ui/Modal";
+import { useRef } from "react";
 
-type FormState = "idle" | "submitting" | "success";
+// ── Types ─────────────────────────────────────────────────────────────────────
+type FormState = "idle" | "submitting" | "success" | "error";
 
-const MATERIALS = [
-  "Mild Steel",
-  "Stainless Steel",
-  "Aluminum",
-  "Brass",
-  "Copper",
-  "Titanium",
-  "Cast Iron",
-  "Alloy Steel",
-  "Other",
-];
+// ── Data ──────────────────────────────────────────────────────────────────────
+const COUNTRY_OPTIONS = COUNTRY_CODES.map((c) => ({
+  value: c.name,
+  label: `${c.flag} ${c.name}`,
+}));
+const INDIA_OPTION =
+  COUNTRY_OPTIONS.find((o) => o.value === "India") ?? COUNTRY_OPTIONS[0];
 
-const PROCUREMENT = [
-  "Immediately",
-  "Within 1 Month",
-  "1–3 Months",
-  "3–6 Months",
-  "Just Researching",
-];
-
-const THICKNESS = [
-  "< 1 mm",
-  "1–3 mm",
-  "3–6 mm",
-  "6–10 mm",
-  "10–20 mm",
-  "20–50 mm",
-  "> 50 mm",
-];
-
-// ── Variants ──────────────────────────────────────────────────────────────
-const backdropVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.3, ease: "easeOut" as const },
-  },
-  exit: { opacity: 0, transition: { duration: 0.25, ease: "easeIn" as const } },
-};
-
-const panelVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.97 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.45,
-      ease: [0.215, 0.61, 0.355, 1] as [number, number, number, number],
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: 30,
-    scale: 0.97,
-    transition: { duration: 0.3, ease: "easeIn" as const },
-  },
-};
-
-const formContainerVariants = {
+// ── Motion variants ───────────────────────────────────────────────────────────
+const formV = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.04, delayChildren: 0.15 } },
+  visible: { transition: { staggerChildren: 0.032, delayChildren: 0.06 } },
 };
 
-const fieldVariants = {
-  hidden: { opacity: 0, y: 14 },
+const rowV = {
+  hidden: { opacity: 0, y: 8 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.38,
+      duration: 0.28,
       ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
     },
   },
 };
 
-const successVariants = {
-  hidden: { opacity: 0, scale: 0.88, y: 24 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: "backOut" as const },
-  },
-};
-
-const dropdownVariants = {
-  hidden: { opacity: 0, y: -6, scale: 0.97 },
+const dropdownV = {
+  hidden: { opacity: 0, y: -4, scale: 0.975 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: {
-      duration: 0.22,
-      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
-    },
+    transition: { duration: 0.16, ease: "easeOut" as const },
   },
   exit: {
     opacity: 0,
-    y: -6,
-    scale: 0.97,
-    transition: { duration: 0.14, ease: "easeIn" as const },
+    y: -4,
+    scale: 0.975,
+    transition: { duration: 0.1, ease: "easeIn" as const },
   },
 };
 
-// ── Shared input style ────────────────────────────────────────────────────
-const inputBase: React.CSSProperties = {
-  background: "var(--color-surface-2)",
-  border: "1px solid var(--color-border)",
-  color: "var(--color-text)",
-  fontFamily: "var(--font-body)",
+const successV = {
+  hidden: { opacity: 0, scale: 0.88, y: 16 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.48, ease: "backOut" as const },
+  },
 };
 
-function focusBorder(e: React.FocusEvent<HTMLElement>) {
-  e.currentTarget.style.borderColor = "var(--color-accent)";
-}
-function blurBorder(e: React.FocusEvent<HTMLElement>) {
-  e.currentTarget.style.borderColor = "var(--color-border)";
-}
-
-// ── Label ─────────────────────────────────────────────────────────────────
+// ── Label ─────────────────────────────────────────────────────────────────────
 function Label({
   children,
   required,
+  icon,
 }: {
   children: React.ReactNode;
   required?: boolean;
+  icon?: React.ReactNode;
 }) {
   return (
     <label
-      className="block text-[10px] font-display uppercase tracking-[0.18em] mb-1.5"
-      style={{ color: "var(--color-text-faint)" }}
+      className="flex items-center gap-1.5 text-[10px] font-display uppercase tracking-[0.16em] mb-1.5"
+      style={{ color: "var(--color-light-faint)" }}
     >
+      {icon && (
+        <span style={{ color: "var(--color-light-accent)", opacity: 0.8 }}>
+          {icon}
+        </span>
+      )}
       {children}
       {required && (
-        <span className="ml-0.5" style={{ color: "var(--color-accent)" }}>
-          *
-        </span>
+        <span style={{ color: "var(--color-light-accent)" }}>*</span>
       )}
     </label>
   );
 }
 
-// ── Input ─────────────────────────────────────────────────────────────────
+// ── Input ─────────────────────────────────────────────────────────────────────
 function Input({
   type = "text",
   name,
@@ -160,6 +116,7 @@ function Input({
   required,
   value,
   onChange,
+  autoComplete,
 }: {
   type?: string;
   name: string;
@@ -167,7 +124,10 @@ function Input({
   required?: boolean;
   value: string;
   onChange: (v: string) => void;
+  autoComplete?: string;
 }) {
+  const [focused, setFocused] = useState(false);
+
   return (
     <input
       type={type}
@@ -175,66 +135,67 @@ function Input({
       placeholder={placeholder}
       required={required}
       value={value}
+      autoComplete={autoComplete}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full px-3 py-2.5 text-sm rounded-sm outline-none transition-colors duration-200"
-      style={inputBase}
-      onFocus={focusBorder}
-      onBlur={blurBorder}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      className="w-full px-3 py-2.5 text-sm outline-none transition-all duration-150 rounded-sm"
+      style={{
+        background: focused
+          ? "var(--color-light-bg)"
+          : "var(--color-light-surface)",
+        border: focused
+          ? "1px solid var(--color-light-accent)"
+          : "1px solid var(--color-light-border)",
+        color: "var(--color-light-text)",
+        fontFamily: "var(--font-body)",
+      }}
     />
   );
 }
 
-// ── Select ────────────────────────────────────────────────────────────────
-function Select({
+// ── Textarea ──────────────────────────────────────────────────────────────────
+function Textarea({
   name,
-  options,
   placeholder,
-  required,
+  rows = 3,
   value,
   onChange,
 }: {
   name: string;
-  options: string[];
   placeholder?: string;
-  required?: boolean;
+  rows?: number;
   value: string;
   onChange: (v: string) => void;
 }) {
+  const [focused, setFocused] = useState(false);
+
   return (
-    <div className="relative">
-      <select
-        name={name}
-        required={required}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2.5 text-sm rounded-sm outline-none appearance-none transition-colors duration-200 cursor-pointer"
-        style={{
-          ...inputBase,
-          color: value ? "var(--color-text)" : "var(--color-text-faint)",
-        }}
-        onFocus={focusBorder}
-        onBlur={blurBorder}
-      >
-        <option value="" disabled>
-          {placeholder ?? "Select..."}
-        </option>
-        {options.map((o) => (
-          <option key={o} value={o}>
-            {o}
-          </option>
-        ))}
-      </select>
-      <FiChevronDown
-        size={13}
-        className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-        style={{ color: "var(--color-text-faint)" }}
-      />
-    </div>
+    <textarea
+      name={name}
+      rows={rows}
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      className="w-full px-3 py-2.5 text-sm resize-none outline-none transition-all duration-150 rounded-sm"
+      style={{
+        background: focused
+          ? "var(--color-light-bg)"
+          : "var(--color-light-surface)",
+        border: focused
+          ? "1px solid var(--color-light-accent)"
+          : "1px solid var(--color-light-border)",
+        color: "var(--color-light-text)",
+        fontFamily: "var(--font-body)",
+      }}
+    />
   );
 }
 
-// ── Country Picker ────────────────────────────────────────────────────────
-function CountryPicker({
+// ── Dial Code Picker ──────────────────────────────────────────────────────────
+function DialCodePicker({
   value,
   onChange,
 }: {
@@ -243,20 +204,21 @@ function CountryPicker({
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [focused, setFocused] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   const selected =
     COUNTRY_CODES.find((c) => c.code === value) ?? COUNTRY_CODES[0];
 
   useEffect(() => {
     if (!open) return;
-    const handler = (e: MouseEvent) => {
-      const picker = document.getElementById("country-picker-root");
-      if (picker && !picker.contains(e.target as Node)) {
+    const fn = (e: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
         setOpen(false);
         setSearch("");
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
   }, [open]);
 
   const filtered = COUNTRY_CODES.filter(
@@ -266,65 +228,74 @@ function CountryPicker({
   );
 
   return (
-    <div id="country-picker-root" className="relative">
+    <div ref={rootRef} className="relative shrink-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 px-3 py-2.5 text-sm rounded-sm transition-colors duration-200 whitespace-nowrap"
-        style={{ ...inputBase, minWidth: "90px" }}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="flex items-center gap-1.5 px-3 h-full text-sm whitespace-nowrap transition-all duration-150 rounded-sm"
+        style={{
+          minWidth: "86px",
+          background: focused
+            ? "var(--color-light-bg)"
+            : "var(--color-light-surface)",
+          border: focused
+            ? "1px solid var(--color-light-accent)"
+            : "1px solid var(--color-light-border)",
+          color: "var(--color-light-text)",
+          fontFamily: "var(--font-body)",
+        }}
       >
-        <span>{selected.flag}</span>
-        <span className="text-xs" style={{ color: "var(--color-text-muted)" }}>
+        <span className="text-base leading-none">{selected.flag}</span>
+        <span className="text-xs" style={{ color: "var(--color-light-muted)" }}>
           {selected.code}
         </span>
         <FiChevronDown
-          size={12}
-          className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          style={{ color: "var(--color-text-faint)" }}
+          size={10}
+          className={`ml-auto transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          style={{ color: "var(--color-light-faint)" }}
         />
       </button>
 
       <AnimatePresence>
         {open && (
           <motion.div
-            variants={dropdownVariants}
+            variants={dropdownV}
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute left-0 top-full mt-1 z-50 w-56 rounded-sm overflow-hidden"
+            className="absolute left-0 top-full mt-1 z-[300] w-52 overflow-hidden rounded-sm"
             style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-              boxShadow: "0 16px 48px rgba(0,0,0,0.6)",
+              background: "var(--color-light-bg)",
+              border: "1px solid var(--color-light-border)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
             }}
           >
-            {/* Search */}
             <div
-              className="flex items-center gap-2 px-3 py-2 sticky top-0"
+              className="flex items-center gap-2 px-3 py-2.5 sticky top-0"
               style={{
-                background: "var(--color-surface)",
-                borderBottom: "1px solid var(--color-border)",
+                background: "var(--color-light-bg)",
+                borderBottom: "1px solid var(--color-light-border)",
               }}
             >
               <FiSearch
-                size={12}
-                style={{ color: "var(--color-text-faint)" }}
+                size={11}
+                style={{ color: "var(--color-light-faint)" }}
               />
               <input
                 autoFocus
                 type="text"
-                placeholder="Search country..."
+                placeholder="Search…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="flex-1 text-xs outline-none bg-transparent"
-                style={{ color: "var(--color-text)" }}
+                style={{ color: "var(--color-light-text)" }}
               />
             </div>
-
-            {/* List */}
             <ul
-              className="max-h-48 overflow-y-auto"
-              style={{ scrollbarWidth: "thin" }}
+              className="max-h-44 overflow-y-auto"
+              style={{ scrollbarWidth: "none" } as React.CSSProperties}
             >
               {filtered.map((c, i) => (
                 <li key={`${c.code}-${i}`}>
@@ -335,28 +306,28 @@ function CountryPicker({
                       setOpen(false);
                       setSearch("");
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs transition-colors duration-150 text-left"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-left transition-colors duration-100"
                     style={{
                       background:
                         c.code === value
-                          ? "var(--color-surface-2)"
+                          ? "var(--color-light-surface)"
                           : "transparent",
-                      color: "var(--color-text-muted)",
+                      color: "var(--color-light-muted)",
                     }}
                     onMouseEnter={(e) => {
                       (e.currentTarget as HTMLElement).style.background =
-                        "var(--color-surface-2)";
+                        "var(--color-light-surface)";
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLElement).style.background =
                         c.code === value
-                          ? "var(--color-surface-2)"
+                          ? "var(--color-light-surface)"
                           : "transparent";
                     }}
                   >
                     <span>{c.flag}</span>
-                    <span className="flex-1">{c.name}</span>
-                    <span style={{ color: "var(--color-text-faint)" }}>
+                    <span className="flex-1 truncate">{c.name}</span>
+                    <span style={{ color: "var(--color-light-faint)" }}>
                       {c.code}
                     </span>
                   </button>
@@ -365,7 +336,7 @@ function CountryPicker({
               {filtered.length === 0 && (
                 <li
                   className="px-3 py-4 text-xs text-center"
-                  style={{ color: "var(--color-text-faint)" }}
+                  style={{ color: "var(--color-light-faint)" }}
                 >
                   No results
                 </li>
@@ -378,31 +349,28 @@ function CountryPicker({
   );
 }
 
-// ── Progress Bar ──────────────────────────────────────────────────────────
+// ── Progress bar ──────────────────────────────────────────────────────────────
 function ProgressBar({ form }: { form: Record<string, string> }) {
-  const required = ["name", "state", "email", "phone"];
+  const required = ["firstName", "email", "phone", "city"];
   const filled = required.filter((k) => form[k]?.trim()).length;
   const pct = Math.round((filled / required.length) * 100);
 
   return (
-    <div
-      className="flex items-center gap-3 px-6 py-2.5 shrink-0"
-      style={{ borderBottom: "1px solid var(--color-border)" }}
-    >
+    <div className="flex items-center gap-3 mb-5">
       <div
-        className="flex-1 h-[3px] rounded-full overflow-hidden"
-        style={{ background: "var(--color-surface-3)" }}
+        className="flex-1 h-[2px] rounded-full overflow-hidden"
+        style={{ background: "var(--color-light-surface)" }}
       >
         <motion.div
           className="h-full rounded-full"
-          style={{ background: "var(--color-accent)" }}
+          style={{ background: "var(--color-light-accent)" }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
       <span
-        className="text-[10px] font-display uppercase tracking-widest shrink-0"
-        style={{ color: "var(--color-text-faint)" }}
+        className="text-[10px] font-display uppercase tracking-widest shrink-0 tabular-nums"
+        style={{ color: "var(--color-light-faint)" }}
       >
         {filled}/{required.length} required
       </span>
@@ -410,52 +378,166 @@ function ProgressBar({ form }: { form: Record<string, string> }) {
   );
 }
 
-// ── Success View ──────────────────────────────────────────────────────────
+// ── Section divider ───────────────────────────────────────────────────────────
+function SectionDivider({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-3 pt-1 pb-0.5">
+      <div
+        className="flex-1 h-px"
+        style={{ background: "var(--color-light-border)" }}
+      />
+      <span
+        className="text-[9px] font-display uppercase tracking-[0.2em] shrink-0"
+        style={{ color: "var(--color-light-faint)" }}
+      >
+        {label}
+      </span>
+      <div
+        className="flex-1 h-px"
+        style={{ background: "var(--color-light-border)" }}
+      />
+    </div>
+  );
+}
+
+// ── Error banner ──────────────────────────────────────────────────────────────
+function ErrorBanner({
+  message,
+  onDismiss,
+}: {
+  message: string;
+  onDismiss: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -6 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex items-start gap-3 px-4 py-3 rounded-sm mb-4"
+      style={{ background: "#fff1f0", border: "1px solid #fca5a5" }}
+    >
+      <FiAlertCircle
+        size={14}
+        className="shrink-0 mt-0.5"
+        style={{ color: "#dc2626" }}
+      />
+      <p
+        className="text-xs flex-1 leading-relaxed"
+        style={{ color: "#991b1b" }}
+      >
+        {message}
+      </p>
+      <button onClick={onDismiss} style={{ color: "#dc2626" }}>
+        <FiX size={12} />
+      </button>
+    </motion.div>
+  );
+}
+
+// ── react-select styles ───────────────────────────────────────────────────────
+const selectStyles = {
+  control: (b: Record<string, unknown>, s: { isFocused: boolean }) => ({
+    ...b,
+    background: s.isFocused
+      ? "var(--color-light-bg)"
+      : "var(--color-light-surface)",
+    border: `1px solid ${s.isFocused ? "var(--color-light-accent)" : "var(--color-light-border)"}`,
+    borderRadius: "4px",
+    boxShadow: "none",
+    minHeight: "40px",
+    fontSize: "13px",
+    color: "var(--color-light-text)",
+    fontFamily: "var(--font-body)",
+    transition: "border-color 150ms, background 150ms",
+    "&:hover": { borderColor: "var(--color-light-accent)" },
+  }),
+  menu: (b: Record<string, unknown>) => ({
+    ...b,
+    background: "var(--color-light-bg)",
+    border: "1px solid var(--color-light-border)",
+    borderRadius: "4px",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
+    zIndex: 9999,
+  }),
+  option: (
+    b: Record<string, unknown>,
+    s: { isSelected: boolean; isFocused: boolean },
+  ) => ({
+    ...b,
+    background:
+      s.isSelected || s.isFocused
+        ? "var(--color-light-surface)"
+        : "transparent",
+    color: "var(--color-light-text)",
+    fontSize: "13px",
+    cursor: "pointer",
+  }),
+  singleValue: (b: Record<string, unknown>) => ({
+    ...b,
+    color: "var(--color-light-text)",
+  }),
+  placeholder: (b: Record<string, unknown>) => ({
+    ...b,
+    color: "var(--color-light-faint)",
+    fontSize: "13px",
+  }),
+  input: (b: Record<string, unknown>) => ({
+    ...b,
+    color: "var(--color-light-text)",
+  }),
+  indicatorSeparator: () => ({ display: "none" }),
+  dropdownIndicator: (b: Record<string, unknown>) => ({
+    ...b,
+    color: "var(--color-light-faint)",
+    padding: "0 8px",
+  }),
+  menuPortal: (b: Record<string, unknown>) => ({ ...b, zIndex: 9999 }),
+};
+
+// ── Success view ──────────────────────────────────────────────────────────────
 function SuccessView({ onClose }: { onClose: () => void }) {
   return (
     <motion.div
-      variants={successVariants}
+      variants={successV}
       initial="hidden"
       animate="visible"
-      className="flex flex-col items-center justify-center text-center py-16 px-8"
+      className="flex flex-col items-center justify-center text-center py-12 px-4"
     >
-      {/* Animated check ring */}
       <div className="relative mb-6">
         <motion.div
-          className="w-20 h-20 rounded-full flex items-center justify-center"
+          className="flex items-center justify-center rounded-full"
           style={{
-            background: "var(--color-surface-3)",
-            border: "1px solid var(--color-border)",
+            width: 72,
+            height: 72,
+            background: `oklch(from var(--color-light-accent) l c h / 0.08)`,
+            border: `1.5px solid oklch(from var(--color-light-accent) l c h / 0.3)`,
           }}
-          animate={{ scale: [0.7, 1.05, 1] }}
-          transition={{ duration: 0.55, ease: "backOut" }}
+          animate={{ scale: [0.7, 1.06, 1] }}
+          transition={{ duration: 0.5, ease: "backOut" }}
         >
-          <FiCheck size={32} style={{ color: "var(--color-accent)" }} />
+          <FiCheck size={28} style={{ color: "var(--color-light-accent)" }} />
         </motion.div>
-        {/* Pulse ring */}
         <motion.div
-          className="absolute inset-0 rounded-full"
-          style={{ border: "2px solid var(--color-accent)" }}
-          animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+          className="absolute inset-0 rounded-full pointer-events-none"
+          style={{ border: "2px solid var(--color-light-accent)" }}
+          animate={{ scale: [1, 1.6], opacity: [0.4, 0] }}
           transition={{ duration: 1, delay: 0.3, repeat: 2 }}
         />
       </div>
 
       <h3
-        className="font-display font-bold text-2xl mb-2"
-        style={{ color: "var(--color-text)" }}
+        className="font-display font-bold text-xl mb-2"
+        style={{ color: "var(--color-light-text)" }}
       >
         Request Submitted!
       </h3>
       <p
-        className="text-sm max-w-xs leading-relaxed mb-2"
-        style={{ color: "var(--color-text-muted)" }}
+        className="text-sm leading-relaxed mb-1.5 max-w-[26ch]"
+        style={{ color: "var(--color-light-muted)" }}
       >
-        Thank you for reaching out. Our engineering team will review your
-        requirements and get back to you within{" "}
+        Our engineering team will review and respond within{" "}
         <span
-          style={{ color: "var(--color-accent)" }}
           className="font-semibold"
+          style={{ color: "var(--color-light-accent)" }}
         >
           24 hours
         </span>
@@ -463,68 +545,61 @@ function SuccessView({ onClose }: { onClose: () => void }) {
       </p>
       <p
         className="text-[11px] mb-8"
-        style={{ color: "var(--color-text-faint)" }}
+        style={{ color: "var(--color-light-faint)" }}
       >
-        Check your inbox — a confirmation has been sent.
+        A confirmation has been sent to your inbox.
       </p>
-
       <button
         onClick={onClose}
-        className="px-8 py-3 text-xs font-display font-semibold uppercase tracking-widest rounded-sm transition-colors duration-200"
-        style={{ background: "var(--color-accent)", color: "var(--color-bg)" }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.background =
-            "var(--color-accent-hover)";
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.background =
-            "var(--color-accent)";
+        className="px-8 py-3 text-xs font-display font-semibold uppercase tracking-widest rounded-sm transition-opacity duration-200 hover:opacity-85 active:opacity-75"
+        style={{
+          background: "var(--color-light-accent)",
+          color: "#fff",
         }}
       >
-        Close
+        Done
       </button>
     </motion.div>
   );
 }
 
-// ── Main Modal ────────────────────────────────────────────────────────────
+// ── Main modal ────────────────────────────────────────────────────────────────
 export default function QuoteModal() {
   const { isOpen, closeModal } = useModal();
 
   const [formState, setFormState] = useState<FormState>("idle");
-  const [countryCode, setCountryCode] = useState("+91");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [dialCode, setDialCode] = useState("+91");
+  const [country, setCountry] = useState(INDIA_OPTION);
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     company: "",
-    state: "",
+    subject: "",
     email: "",
     phone: "",
-    material: "",
-    thickness: "",
-    procurement: "",
+    city: "",
+    state: "",
     message: "",
   });
 
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
+  // Reset on close
   useEffect(() => {
     if (!isOpen) {
       const t = setTimeout(() => {
         setFormState("idle");
+        setErrorMsg("");
+        setDialCode("+91");
+        setCountry(INDIA_OPTION);
         setForm({
-          name: "",
+          firstName: "",
+          lastName: "",
           company: "",
-          state: "",
+          subject: "",
           email: "",
           phone: "",
-          material: "",
-          thickness: "",
-          procurement: "",
+          city: "",
+          state: "",
           message: "",
         });
       }, 350);
@@ -532,295 +607,253 @@ export default function QuoteModal() {
     }
   }, [isOpen]);
 
-  function setField(key: keyof typeof form) {
-    return (v: string) => setForm((f) => ({ ...f, [key]: v }));
-  }
+  const setField = (key: keyof typeof form) => (v: string) =>
+    setForm((f) => ({ ...f, [key]: v }));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormState("submitting");
-    await new Promise((r) => setTimeout(r, 1500));
-    setFormState("success");
+    setErrorMsg("");
+
+    const result = await submitContactForm({
+      first_name: form.firstName,
+      last_name: form.lastName || undefined,
+      company_name: form.company || undefined,
+      email: form.email,
+      country_code: dialCode,
+      phone: form.phone,
+      subject: form.subject || undefined,
+      city_name: form.city,
+      state: form.state || undefined,
+      country_name: country?.value || "India",
+      message: form.message || undefined,
+    });
+
+    if (result.success) {
+      setFormState("success");
+    } else {
+      setErrorMsg(result.message || "Submission failed. Please try again.");
+      setFormState("error");
+    }
   }
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          key="quote-backdrop"
-          variants={backdropVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(8px)" }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) closeModal();
-          }}
-        >
-          <motion.div
-            key="quote-panel"
-            variants={panelVariants}
+    <Modal
+      open={isOpen}
+      onClose={closeModal}
+      eyebrow="Free Consultation"
+      title="Talk to an Expert / Get a Quote"
+      accentImage="https://picsum.photos/seed/industrial-steel/400/680"
+      maxWidth={860}
+    >
+      <AnimatePresence mode="wait">
+        {formState === "success" ? (
+          <SuccessView key="success" onClose={closeModal} />
+        ) : (
+          <motion.form
+            key="form"
+            onSubmit={handleSubmit}
+            variants={formV}
             initial="hidden"
             animate="visible"
-            exit="exit"
-            className="relative w-full max-w-2xl max-h-[92vh] flex flex-col rounded-sm overflow-hidden"
-            style={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-              boxShadow: "0 32px 80px rgba(0,0,0,0.75)",
-            }}
+            className="space-y-3.5"
           >
-            {/* ── Header ── */}
-            <div
-              className="flex items-center justify-between px-6 py-4 shrink-0"
-              style={{ borderBottom: "1px solid var(--color-border)" }}
-            >
-              <div className="flex items-center gap-4">
-                {/* Accent dot */}
-                <span
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{ background: "var(--color-accent)" }}
+            {/* Progress bar */}
+            <ProgressBar form={form} />
+
+            {/* Error banner */}
+            {formState === "error" && errorMsg && (
+              <ErrorBanner
+                message={errorMsg}
+                onDismiss={() => {
+                  setFormState("idle");
+                  setErrorMsg("");
+                }}
+              />
+            )}
+
+            {/* ── Personal info ── */}
+            <SectionDivider label="Personal Info" />
+
+            <motion.div variants={rowV} className="grid grid-cols-2 gap-3">
+              <div>
+                <Label required icon={<FiUser size={9} />}>
+                  First Name
+                </Label>
+                <Input
+                  name="firstName"
+                  placeholder="John"
+                  required
+                  value={form.firstName}
+                  onChange={setField("firstName")}
+                  autoComplete="given-name"
                 />
-                <div>
-                  <p
-                    className="text-[10px] font-display uppercase tracking-[0.2em] mb-0.5"
-                    style={{ color: "var(--color-text-faint)" }}
-                  >
-                    Free Consultation
-                  </p>
-                  <h2
-                    className="font-display font-bold text-lg"
-                    style={{ color: "var(--color-text)" }}
-                  >
-                    Talk to an Expert / Get a Quote
-                  </h2>
+              </div>
+              <div>
+                <Label icon={<FiUser size={9} />}>Last Name</Label>
+                <Input
+                  name="lastName"
+                  placeholder="Smith"
+                  value={form.lastName}
+                  onChange={setField("lastName")}
+                  autoComplete="family-name"
+                />
+              </div>
+            </motion.div>
+
+            <motion.div variants={rowV} className="grid grid-cols-2 gap-3">
+              <div>
+                <Label icon={<FiBriefcase size={9} />}>Company</Label>
+                <Input
+                  name="company"
+                  placeholder="Your company"
+                  value={form.company}
+                  onChange={setField("company")}
+                  autoComplete="organization"
+                />
+              </div>
+              <div>
+                <Label icon={<FiTag size={9} />}>Subject</Label>
+                <Input
+                  name="subject"
+                  placeholder="e.g. Laser Cut Quote"
+                  value={form.subject}
+                  onChange={setField("subject")}
+                />
+              </div>
+            </motion.div>
+
+            {/* ── Contact ── */}
+            <SectionDivider label="Contact" />
+
+            <motion.div variants={rowV}>
+              <Label required icon={<FiMail size={9} />}>
+                Email Address
+              </Label>
+              <Input
+                type="email"
+                name="email"
+                placeholder="you@company.com"
+                required
+                value={form.email}
+                onChange={setField("email")}
+                autoComplete="email"
+              />
+            </motion.div>
+
+            <motion.div variants={rowV}>
+              <Label required icon={<FiPhone size={9} />}>
+                Phone Number
+              </Label>
+              <div className="flex gap-2 items-stretch">
+                <DialCodePicker value={dialCode} onChange={setDialCode} />
+                <div className="flex-1">
+                  <Input
+                    type="tel"
+                    name="phone"
+                    placeholder="98765 43210"
+                    required
+                    value={form.phone}
+                    onChange={setField("phone")}
+                    autoComplete="tel-national"
+                  />
                 </div>
               </div>
+            </motion.div>
 
-              <button
-                onClick={closeModal}
-                className="p-2 rounded-sm transition-all duration-200"
-                style={{ color: "var(--color-text-faint)" }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color =
-                    "var(--color-text)";
-                  (e.currentTarget as HTMLElement).style.background =
-                    "var(--color-surface-2)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color =
-                    "var(--color-text-faint)";
-                  (e.currentTarget as HTMLElement).style.background =
-                    "transparent";
-                }}
-                aria-label="Close modal"
+            {/* ── Location ── */}
+            <SectionDivider label="Location" />
+
+            <motion.div variants={rowV} className="grid grid-cols-2 gap-3">
+              <div>
+                <Label required icon={<FiMapPin size={9} />}>
+                  City
+                </Label>
+                <Input
+                  name="city"
+                  placeholder="Ahmedabad"
+                  required
+                  value={form.city}
+                  onChange={setField("city")}
+                  autoComplete="address-level2"
+                />
+              </div>
+              <div>
+                <Label icon={<FiMapPin size={9} />}>State</Label>
+                <Input
+                  name="state"
+                  placeholder="Gujarat"
+                  value={form.state}
+                  onChange={setField("state")}
+                  autoComplete="address-level1"
+                />
+              </div>
+            </motion.div>
+
+            <motion.div variants={rowV}>
+              <Label icon={<FiMapPin size={9} />}>Country</Label>
+              <Select
+                instanceId="qm-country"
+                options={COUNTRY_OPTIONS}
+                value={country}
+                onChange={(opt) => setCountry(opt as typeof INDIA_OPTION)}
+                styles={selectStyles as Parameters<typeof Select>[0]["styles"]}
+                placeholder="Select country…"
+                isSearchable
+                menuPortalTarget={
+                  typeof document !== "undefined" ? document.body : null
+                }
+                menuPosition="fixed"
+              />
+            </motion.div>
+
+            {/* ── Message ── */}
+            <SectionDivider label="Your Message" />
+
+            <motion.div variants={rowV}>
+              <Label icon={<FiMessageSquare size={9} />}>Message</Label>
+              <Textarea
+                name="message"
+                placeholder="Describe your project, material specs, quantity, or any questions…"
+                rows={3}
+                value={form.message}
+                onChange={setField("message")}
+              />
+            </motion.div>
+
+            {/* ── Submit ── */}
+            <motion.div variants={rowV} className="pt-2 pb-1">
+              <p
+                className="text-[10px] text-center mb-3"
+                style={{ color: "var(--color-light-faint)" }}
               >
-                <FiX size={18} />
+                We respect your privacy — no spam, ever.
+              </p>
+              <button
+                type="submit"
+                disabled={formState === "submitting"}
+                className="w-full flex items-center justify-center gap-2.5 py-3.5 text-[13px] font-display font-semibold uppercase tracking-widest rounded-sm transition-opacity duration-200 disabled:opacity-60 hover:opacity-85 active:opacity-75"
+                style={{
+                  background: "var(--color-light-accent)",
+                  color: "#fff",
+                }}
+              >
+                {formState === "submitting" ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Submitting…
+                  </>
+                ) : (
+                  <>
+                    <RiSendPlaneLine size={15} />
+                    Submit Request
+                  </>
+                )}
               </button>
-            </div>
-
-            {/* ── Progress bar (only shown during form) ── */}
-            {formState !== "success" && <ProgressBar form={form} />}
-
-            {/* ── Body ── */}
-            <div className="overflow-y-auto flex-1 px-6 py-5">
-              {formState === "success" ? (
-                <SuccessView onClose={closeModal} />
-              ) : (
-                <motion.form
-                  onSubmit={handleSubmit}
-                  className="space-y-4"
-                  variants={formContainerVariants}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  {/* Row 1 — Name + Company */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <motion.div variants={fieldVariants}>
-                      <Label required>Full Name</Label>
-                      <Input
-                        name="name"
-                        placeholder="John Smith"
-                        required
-                        value={form.name}
-                        onChange={setField("name")}
-                      />
-                    </motion.div>
-                    <motion.div variants={fieldVariants}>
-                      <Label>Company</Label>
-                      <Input
-                        name="company"
-                        placeholder="Your company"
-                        value={form.company}
-                        onChange={setField("company")}
-                      />
-                    </motion.div>
-                  </div>
-
-                  {/* Row 2 — State + Email */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <motion.div variants={fieldVariants}>
-                      <Label required>State / Province</Label>
-                      <Input
-                        name="state"
-                        placeholder="Gujarat"
-                        required
-                        value={form.state}
-                        onChange={setField("state")}
-                      />
-                    </motion.div>
-                    <motion.div variants={fieldVariants}>
-                      <Label required>Email Address</Label>
-                      <Input
-                        type="email"
-                        name="email"
-                        placeholder="you@company.com"
-                        required
-                        value={form.email}
-                        onChange={setField("email")}
-                      />
-                    </motion.div>
-                  </div>
-
-                  {/* Row 3 — Phone */}
-                  <motion.div variants={fieldVariants}>
-                    <Label required>Phone Number</Label>
-                    <div className="flex gap-2">
-                      <CountryPicker
-                        value={countryCode}
-                        onChange={setCountryCode}
-                      />
-                      <div className="flex-1">
-                        <Input
-                          type="tel"
-                          name="phone"
-                          placeholder="98765 43210"
-                          required
-                          value={form.phone}
-                          onChange={setField("phone")}
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Row 4 — Material + Thickness */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <motion.div variants={fieldVariants}>
-                      <Label>Cutting Material</Label>
-                      <Select
-                        name="material"
-                        options={MATERIALS}
-                        placeholder="Select material"
-                        value={form.material}
-                        onChange={setField("material")}
-                      />
-                    </motion.div>
-                    <motion.div variants={fieldVariants}>
-                      <Label>Cutting Thickness</Label>
-                      <Select
-                        name="thickness"
-                        options={THICKNESS}
-                        placeholder="Select thickness"
-                        value={form.thickness}
-                        onChange={setField("thickness")}
-                      />
-                    </motion.div>
-                  </div>
-
-                  {/* Row 5 — Procurement chips */}
-                  <motion.div variants={fieldVariants}>
-                    <Label>When is Your Procurement?</Label>
-                    <div className="flex flex-wrap gap-2 mt-1">
-                      {PROCUREMENT.map((p) => {
-                        const active = form.procurement === p;
-                        return (
-                          <button
-                            key={p}
-                            type="button"
-                            onClick={() =>
-                              setField("procurement")(active ? "" : p)
-                            }
-                            className="px-3 py-1.5 text-[11px] font-display uppercase tracking-wider rounded-sm transition-all duration-150"
-                            style={{
-                              border: `1px solid ${active ? "var(--color-accent)" : "var(--color-border)"}`,
-                              background: active
-                                ? "var(--color-surface-3)"
-                                : "transparent",
-                              color: active
-                                ? "var(--color-accent)"
-                                : "var(--color-accent)",
-                            }}
-                          >
-                            {p}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </motion.div>
-
-                  {/* Row 6 — Message */}
-                  <motion.div variants={fieldVariants}>
-                    <Label>Message</Label>
-                    <textarea
-                      name="message"
-                      rows={3}
-                      placeholder="Describe your project, requirements, or questions..."
-                      value={form.message}
-                      onChange={(e) => setField("message")(e.target.value)}
-                      className="w-full px-3 py-2.5 text-sm rounded-sm resize-none outline-none transition-colors duration-200"
-                      style={inputBase}
-                      onFocus={focusBorder}
-                      onBlur={blurBorder}
-                    />
-                  </motion.div>
-
-                  {/* Submit */}
-                  <motion.div variants={fieldVariants} className="pt-1 pb-1">
-                    <button
-                      type="submit"
-                      disabled={formState === "submitting"}
-                      className="w-full flex items-center justify-center gap-2.5 py-3.5 text-sm font-display font-semibold uppercase tracking-widest rounded-sm transition-all duration-200 disabled:opacity-60"
-                      style={{
-                        background: "var(--color-accent)",
-                        color: "var(--color-bg)",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (formState !== "submitting")
-                          (e.currentTarget as HTMLElement).style.background =
-                            "var(--color-accent-hover)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background =
-                          "var(--color-accent)";
-                      }}
-                    >
-                      {formState === "submitting" ? (
-                        <>
-                          <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                          Submitting...
-                        </>
-                      ) : (
-                        <>
-                          <RiSendPlaneLine size={16} />
-                          Submit Request
-                        </>
-                      )}
-                    </button>
-
-                    <p
-                      className="text-[10px] text-center mt-3"
-                      style={{ color: "var(--color-text-faint)" }}
-                    >
-                      We respect your privacy. No spam, ever.
-                    </p>
-                  </motion.div>
-                </motion.form>
-              )}
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            </motion.div>
+          </motion.form>
+        )}
+      </AnimatePresence>
+    </Modal>
   );
 }

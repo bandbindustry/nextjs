@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Container from "@/components/ui/Container";
 import { navLinks, siteConfig } from "@/config/site";
-import { productCategories } from "@/data/products";
 import { cn } from "@/utils/cn";
 import {
   RiMenu3Line,
@@ -16,13 +15,16 @@ import {
   RiArrowRightSLine,
   RiArrowDownSLine,
 } from "react-icons/ri";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiTag } from "react-icons/fi";
 import Button from "../ui/Button";
+import { getProductCategories, getProducts } from "@/services/product.service";
+import type { ApiProductCategory, ApiProduct } from "@/types/products";
+import { useModal } from "@/context/ModalContext";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 // Pages that have a light/white background at the top
-const LIGHT_BG_PATHS = ["/blog/"];
+const LIGHT_BG_PATHS = ["/blog/", "/products/"];
 
 function isLightBgPage(pathname: string) {
   return LIGHT_BG_PATHS.some((p) => pathname.startsWith(p));
@@ -31,12 +33,26 @@ function isLightBgPage(pathname: string) {
 export default function Header() {
   const pathname = usePathname();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { openModal } = useModal();
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
-  const [activeProduct, setActiveProduct] = useState(productCategories[0]);
+  const [categories, setCategories] = useState<ApiProductCategory[]>([]);
+  const [activeCategory, setActiveCategory] =
+    useState<ApiProductCategory | null>(null);
+  const categoryProductsCache = useRef<Record<string, ApiProduct[]>>({});
+  const [categoryProducts, setCategoryProducts] = useState<ApiProduct[]>([]);
+  const [productsLoading, setProductsLoading] = useState(false);
+
+  // ── Load categories ──
+  useEffect(() => {
+    getProductCategories().then((cats) => {
+      setCategories(cats);
+      if (cats.length > 0) setActiveCategory(cats[0]);
+    });
+  }, []);
 
   // ── Scroll detection ──
   useEffect(() => {
@@ -60,6 +76,29 @@ export default function Header() {
     };
   }, []);
 
+  // ── Fetch products for active category ──
+  useEffect(() => {
+    if (!activeCategory) return;
+    const catId = activeCategory.id;
+    if (categoryProductsCache.current[catId]) {
+      setCategoryProducts(categoryProductsCache.current[catId]);
+      return;
+    }
+    let cancelled = false;
+    setProductsLoading(true);
+    getProducts({ category_id: catId, per_page: 6 }).then((data) => {
+      if (!cancelled) {
+        const products = data?.data ?? [];
+        categoryProductsCache.current[catId] = products;
+        setCategoryProducts(products);
+        setProductsLoading(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCategory]);
+
   // ── Mega menu hover handlers ──
   function openMega() {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -70,9 +109,9 @@ export default function Header() {
     closeTimer.current = setTimeout(() => setMegaOpen(false), 120);
   }
 
-  // Reset active product when mega opens
+  // Reset active category when mega opens
   function handleProductsEnter() {
-    setActiveProduct(productCategories[0]);
+    if (categories.length > 0) setActiveCategory(categories[0]);
     openMega();
   }
 
@@ -142,7 +181,9 @@ export default function Header() {
                   className={cn(
                     "relative px-4 py-2 text-xs font-display uppercase tracking-widest transition-colors duration-200 flex items-center gap-1 cursor-pointer",
                     isActive || megaOpen
-                      ? "text-[var(--color-accent)]"
+                      ? lightHeader
+                        ? "text-black font-semibold"
+                        : "text-[var(--color-accent)]"
                       : lightHeader
                         ? "text-neutral-600 hover:text-black"
                         : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
@@ -164,7 +205,9 @@ export default function Header() {
                   className={cn(
                     "px-4 py-2 text-xs font-display uppercase tracking-widest transition-colors duration-200",
                     isActive
-                      ? "text-[var(--color-accent)]"
+                      ? lightHeader
+                        ? "text-black font-semibold"
+                        : "text-[var(--color-accent)]"
                       : lightHeader
                         ? "text-neutral-600 hover:text-black"
                         : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
@@ -226,9 +269,10 @@ export default function Header() {
             <motion.div
               className="hidden md:block absolute top-full left-0 right-0"
               style={{
-                background: "var(--color-surface)",
-                borderTop: "1px solid var(--color-border)",
-                borderBottom: "1px solid var(--color-border)",
+                background: "#fff",
+                borderTop: "1px solid #e5e5e5",
+                borderBottom: "1px solid #e5e5e5",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
               }}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -243,12 +287,12 @@ export default function Header() {
                   <div className="col-span-5">
                     <p
                       className="text-[10px] font-display uppercase tracking-[0.2em] mb-4"
-                      style={{ color: "var(--color-text-faint)" }}
+                      style={{ color: "#999" }}
                     >
                       Product Categories
                     </p>
                     <ul className="space-y-1">
-                      {productCategories.map((cat, idx) => (
+                      {categories.map((cat, idx) => (
                         <motion.li
                           key={cat.id}
                           initial={{ opacity: 0, x: -12 }}
@@ -263,42 +307,44 @@ export default function Header() {
                             className="w-full text-left px-3 py-2.5 rounded-sm flex items-center justify-between transition-all duration-150 cursor-pointer"
                             style={{
                               background:
-                                activeProduct.id === cat.id
-                                  ? "var(--color-surface-2)"
+                                activeCategory?.id === cat.id
+                                  ? "#000"
                                   : "transparent",
                               border:
-                                activeProduct.id === cat.id
-                                  ? "1px solid var(--color-border)"
+                                activeCategory?.id === cat.id
+                                  ? "1px solid #e5e5e5"
                                   : "1px solid transparent",
                             }}
-                            onMouseEnter={() => setActiveProduct(cat)}
+                            onMouseEnter={() => setActiveCategory(cat)}
                           >
                             <div>
                               <p
                                 className="font-display font-semibold text-sm"
                                 style={{
                                   color:
-                                    activeProduct.id === cat.id
+                                    activeCategory?.id === cat.id
                                       ? "var(--color-accent)"
-                                      : "var(--color-text-muted)",
+                                      : "#333",
                                 }}
                               >
                                 {cat.name}
                               </p>
-                              <p
-                                className="text-xs mt-0.5"
-                                style={{ color: "var(--color-text-faint)" }}
-                              >
-                                {cat.description}
-                              </p>
+                              {cat.description && (
+                                <p
+                                  className="text-xs mt-0.5"
+                                  style={{ color: "#888" }}
+                                >
+                                  {cat.description}
+                                </p>
+                              )}
                             </div>
                             <RiArrowRightSLine
                               size={16}
                               style={{
                                 color:
-                                  activeProduct.id === cat.id
+                                  activeCategory?.id === cat.id
                                     ? "var(--color-accent)"
-                                    : "var(--color-text-faint)",
+                                    : "#bbb",
                               }}
                             />
                           </button>
@@ -308,7 +354,7 @@ export default function Header() {
 
                     <div
                       className="mt-4 pt-4"
-                      style={{ borderTop: "1px solid var(--color-border)" }}
+                      style={{ borderTop: "1px solid #e5e5e5" }}
                     >
                       <Link
                         href="/products"
@@ -320,118 +366,116 @@ export default function Header() {
                     </div>
                   </div>
 
-                  {/* Right — active product preview */}
+                  {/* Right — category products */}
                   <div className="col-span-7">
                     <AnimatePresence mode="wait">
-                      <motion.div
-                        key={activeProduct.id}
-                        initial={{ opacity: 0, scale: 0.97 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.97 }}
-                        transition={{ duration: 0.25, ease: EASE }}
-                      >
-                        <div className="grid grid-cols-5 gap-4">
-                          {/* Image */}
-                          <div
-                            className="col-span-3 aspect-[16/10] rounded-sm overflow-hidden relative"
-                            style={{
-                              background: "var(--color-surface-2)",
-                              border: "1px solid var(--color-border)",
-                            }}
+                      {activeCategory && (
+                        <motion.div
+                          key={activeCategory.id}
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 6 }}
+                          transition={{ duration: 0.2, ease: EASE }}
+                        >
+                          <p
+                            className="text-[10px] font-display uppercase tracking-[0.2em] mb-3"
+                            style={{ color: "#999" }}
                           >
-                            <Image
-                              src={`https://picsum.photos/seed/${activeProduct.id}/600/400`}
-                              alt={activeProduct.name}
-                              fill
-                              className="object-cover opacity-70"
-                              sizes="400px"
-                            />
-                            <div
-                              className="absolute bottom-0 left-0 right-0 px-4 py-3"
-                              style={{
-                                background:
-                                  "linear-gradient(transparent, rgba(10,10,10,0.9))",
-                              }}
-                            >
-                              <p
-                                className="font-display font-bold text-base"
-                                style={{ color: "var(--color-text)" }}
-                              >
-                                {activeProduct.name}
-                              </p>
-                            </div>
-                          </div>
+                            {activeCategory.name}
+                          </p>
 
-                          {/* Variants */}
-                          <div className="col-span-2 flex flex-col justify-between">
-                            <div>
-                              <p
-                                className="text-[10px] font-display uppercase tracking-[0.2em] mb-3"
-                                style={{ color: "var(--color-text-faint)" }}
-                              >
-                                Variants
-                              </p>
-                              <ul className="space-y-2.5">
-                                {activeProduct.variants.map((variant) => (
-                                  <li key={variant}>
-                                    <Link
-                                      href={`/products/${activeProduct.id}`}
-                                      className="flex items-center gap-2 text-xs transition-colors duration-150"
-                                      style={{
-                                        color: "var(--color-text-muted)",
-                                      }}
-                                      onMouseEnter={(e) =>
-                                        ((
-                                          e.currentTarget as HTMLElement
-                                        ).style.color = "var(--color-text)")
-                                      }
-                                      onMouseLeave={(e) =>
-                                        ((
-                                          e.currentTarget as HTMLElement
-                                        ).style.color =
-                                          "var(--color-text-muted)")
-                                      }
-                                    >
-                                      <span
-                                        className="w-1 h-1 rounded-full shrink-0"
-                                        style={{
-                                          background: "var(--color-accent)",
-                                        }}
+                          {productsLoading ? (
+                            <div className="grid grid-cols-3 gap-3">
+                              {Array.from({ length: 6 }).map((_, i) => (
+                                <div
+                                  key={i}
+                                  className="rounded-sm animate-pulse"
+                                  style={{
+                                    background: "#f5f5f5",
+                                    aspectRatio: "4/3",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          ) : categoryProducts.length === 0 ? (
+                            <p
+                              className="text-sm py-4"
+                              style={{ color: "#999" }}
+                            >
+                              No products in this category.
+                            </p>
+                          ) : (
+                            <div className="grid grid-cols-3 gap-3">
+                              {categoryProducts.slice(0, 6).map((product) => (
+                                <Link
+                                  key={product.id}
+                                  href={`/products/${product.id}`}
+                                  onClick={() => setMegaOpen(false)}
+                                  className="group rounded-sm overflow-hidden transition-shadow duration-200 hover:shadow-md"
+                                  style={{ border: "1px solid #e5e5e5" }}
+                                >
+                                  <div
+                                    className="relative overflow-hidden"
+                                    style={{
+                                      aspectRatio: "4/3",
+                                      background: "#f5f5f5",
+                                    }}
+                                  >
+                                    {product.images?.[0] ? (
+                                      // eslint-disable-next-line @next/next/no-img-element
+                                      <img
+                                        src={product.images[0]}
+                                        alt={product.name}
+                                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                       />
-                                      {variant}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
+                                    ) : (
+                                      <div className="w-full h-full flex items-center justify-center">
+                                        <FiTag
+                                          size={20}
+                                          style={{ color: "#ccc" }}
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="px-2.5 py-2">
+                                    <p
+                                      className="text-xs font-display font-semibold leading-tight line-clamp-2 transition-colors group-hover:text-[var(--color-accent)]"
+                                      style={{ color: "#333" }}
+                                    >
+                                      {product.name}
+                                    </p>
+                                  </div>
+                                </Link>
+                              ))}
                             </div>
+                          )}
 
+                          <div
+                            className="mt-4 pt-3 flex items-center justify-between"
+                            style={{ borderTop: "1px solid #e5e5e5" }}
+                          >
                             <Link
-                              href={`/products/${activeProduct.id}`}
-                              className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-display uppercase tracking-widest rounded-sm transition-all duration-200 mt-4"
+                              href={`/products?category_id=${activeCategory.id}`}
+                              onClick={() => setMegaOpen(false)}
+                              className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-widest transition-opacity hover:opacity-75"
+                              style={{ color: "var(--color-accent)" }}
+                            >
+                              View All in {activeCategory.name}{" "}
+                              <FiArrowRight size={11} />
+                            </Link>
+                            <button
+                              onClick={openModal}
+                              className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-display uppercase tracking-widest rounded-sm transition-opacity duration-200 hover:opacity-85"
                               style={{
-                                border: "1px solid var(--color-border)",
-                                color: "var(--color-text-muted)",
-                              }}
-                              onMouseEnter={(e) => {
-                                (
-                                  e.currentTarget as HTMLElement
-                                ).style.borderColor = "var(--color-accent)";
-                                (e.currentTarget as HTMLElement).style.color =
-                                  "var(--color-accent)";
-                              }}
-                              onMouseLeave={(e) => {
-                                (
-                                  e.currentTarget as HTMLElement
-                                ).style.borderColor = "var(--color-border)";
-                                (e.currentTarget as HTMLElement).style.color =
-                                  "var(--color-text-muted)";
+                                background: "var(--color-accent)",
+                                color: "#fff",
                               }}
                             >
-                              Explore <FiArrowRight size={11} />
-                            </Link>
+                              Get a Quote
+                            </button>
                           </div>
-                        </div>
-                      </motion.div>
+                        </motion.div>
+                      )}
                     </AnimatePresence>
                   </div>
                 </div>
@@ -510,10 +554,10 @@ export default function Header() {
                       className="overflow-hidden"
                     >
                       <div className="py-3 grid grid-cols-2 gap-2 px-1">
-                        {productCategories.map((cat) => (
+                        {categories.map((cat) => (
                           <Link
                             key={cat.id}
-                            href={`/products/${cat.id}`}
+                            href={`/products?category_id=${cat.id}`}
                             onClick={() => setMobileOpen(false)}
                             className="p-3 rounded-sm text-xs font-display transition-all duration-150"
                             style={{

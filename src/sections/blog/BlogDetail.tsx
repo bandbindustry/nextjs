@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import Container from "@/components/ui/Container";
 import type { BlogPost } from "@/types/blog";
 import {
@@ -169,10 +172,14 @@ export default function BlogDetail({ post, related }: Props) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
             >
-              <div
-                className="blog-content"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
+              <div className="blog-content">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                >
+                  {post.content}
+                </ReactMarkdown>
+              </div>
 
               {/* Tags */}
               {post.tags && post.tags.length > 0 && (

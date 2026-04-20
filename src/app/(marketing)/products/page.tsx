@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { createMetadata } from "@/lib/seo";
 import { ProductsGrid } from "@/sections/products";
@@ -21,7 +22,9 @@ export const metadata: Metadata = createMetadata({
 export default function ProductsPage() {
   return (
     <main>
-      <ProductsGrid />
+      <Suspense fallback={null}>
+        <ProductsGrid />
+      </Suspense>
     </main>
   );
 }
