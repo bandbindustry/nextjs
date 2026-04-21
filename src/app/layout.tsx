@@ -12,6 +12,7 @@ import "./globals.css";
 import CookieProvider from "@/components/ui/CookieProvider";
 import GoogleAnalytics from "@/components/shared/GoogleAnalytics";
 import { siteConfig } from "@/config/site";
+import QueryProvider from "@/providers/QueryProvider";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -88,7 +89,7 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${redHatDisplay.variable} font-body antialiased`}
       >
-        {children}
+        <QueryProvider>{children}</QueryProvider>
         <CookieProvider />
         <GoogleAnalytics />
       </body>

@@ -10,14 +10,22 @@ import type {
   ApiCategoriesResponse,
 } from "@/types/products";
 
-// ─── Categories (plain JSON — no encryption) ──────────────────────────────────
+// ─── Shared decrypt helper (handles both encrypted string and plain JSON) ──────
+function tryDecrypt(data: unknown): unknown {
+  if (isTestEnv) return data;
+  if (typeof data === "string" && data.includes(":")) {
+    return decryptData(data);
+  }
+  return data;
+}
+
+// ─── Categories ───────────────────────────────────────────────────────────────
 export async function getProductCategories(): Promise<ApiProductCategory[]> {
   try {
-    const res = await api.get<ApiCategoriesResponse>(
-      endpoints.PRODUCT_CATEGORIES,
-    );
-    if (res.data?.status && Array.isArray(res.data.data)) {
-      return res.data.data;
+    const res = await api.get(endpoints.PRODUCT_CATEGORIES);
+    const payload = tryDecrypt(res.data) as ApiCategoriesResponse;
+    if (payload?.status && Array.isArray(payload.data)) {
+      return payload.data;
     }
     return [];
   } catch (err) {

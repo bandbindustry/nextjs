@@ -11,6 +11,7 @@
   "dependencies": {
     "@next/third-parties": "^16.2.3",
     "@radix-ui/react-dialog": "^1.1.15",
+    "@tanstack/react-query": "^5.99.2",
     "@vnedyalk0v/react19-simple-maps": "^2.0.7",
     "axios": "^1.15.0",
     "clsx": "^2.1.1",

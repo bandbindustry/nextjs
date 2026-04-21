@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import Container from "@/components/ui/Container";
 import { navLinks, siteConfig } from "@/config/site";
 import { cn } from "@/utils/cn";
@@ -18,7 +19,7 @@ import {
 import { FiArrowRight, FiTag } from "react-icons/fi";
 import Button from "../ui/Button";
 import { getProductCategories, getProducts } from "@/services/product.service";
-import type { ApiProductCategory, ApiProduct } from "@/types/products";
+import type { ApiProductCategory } from "@/types/products";
 import { useModal } from "@/context/ModalContext";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -39,20 +40,26 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileCatsOpen, setMobileCatsOpen] = useState(false);
-  const [categories, setCategories] = useState<ApiProductCategory[]>([]);
   const [activeCategory, setActiveCategory] =
     useState<ApiProductCategory | null>(null);
-  const categoryProductsCache = useRef<Record<string, ApiProduct[]>>({});
-  const [categoryProducts, setCategoryProducts] = useState<ApiProduct[]>([]);
-  const [productsLoading, setProductsLoading] = useState(false);
 
-  // ── Load categories ──
-  useEffect(() => {
-    getProductCategories().then((cats) => {
-      setCategories(cats);
-      if (cats.length > 0) setActiveCategory(cats[0]);
-    });
-  }, []);
+  // ── Load categories via TanStack Query ──
+  const { data: categories = [] } = useQuery({
+    queryKey: ["product-categories"],
+    queryFn: getProductCategories,
+  });
+
+  // Derive effective category: user hover selection OR first category
+  const effectiveCategory = activeCategory ?? categories[0] ?? null;
+
+  // ── Load products for active category via TanStack Query ──
+  const { data: categoryProductsData, isFetching: productsLoading } = useQuery({
+    queryKey: ["header-category-products", effectiveCategory?.id],
+    queryFn: () =>
+      getProducts({ category_id: effectiveCategory!.id, per_page: 6 }),
+    enabled: !!effectiveCategory?.id,
+  });
+  const categoryProducts = categoryProductsData?.data ?? [];
 
   // ── Scroll detection ──
   useEffect(() => {
@@ -76,29 +83,6 @@ export default function Header() {
     };
   }, []);
 
-  // ── Fetch products for active category ──
-  useEffect(() => {
-    if (!activeCategory) return;
-    const catId = activeCategory.id;
-    if (categoryProductsCache.current[catId]) {
-      setCategoryProducts(categoryProductsCache.current[catId]);
-      return;
-    }
-    let cancelled = false;
-    setProductsLoading(true);
-    getProducts({ category_id: catId, per_page: 6 }).then((data) => {
-      if (!cancelled) {
-        const products = data?.data ?? [];
-        categoryProductsCache.current[catId] = products;
-        setCategoryProducts(products);
-        setProductsLoading(false);
-      }
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [activeCategory]);
-
   // ── Mega menu hover handlers ──
   function openMega() {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -109,9 +93,9 @@ export default function Header() {
     closeTimer.current = setTimeout(() => setMegaOpen(false), 120);
   }
 
-  // Reset active category when mega opens
+  // Reset active category when mega opens (null → effectiveCategory falls back to categories[0])
   function handleProductsEnter() {
-    if (categories.length > 0) setActiveCategory(categories[0]);
+    setActiveCategory(null);
     openMega();
   }
 
@@ -307,11 +291,11 @@ export default function Header() {
                             className="w-full text-left px-3 py-2.5 rounded-sm flex items-center justify-between transition-all duration-150 cursor-pointer"
                             style={{
                               background:
-                                activeCategory?.id === cat.id
+                                effectiveCategory?.id === cat.id
                                   ? "#000"
                                   : "transparent",
                               border:
-                                activeCategory?.id === cat.id
+                                effectiveCategory?.id === cat.id
                                   ? "1px solid #e5e5e5"
                                   : "1px solid transparent",
                             }}
@@ -322,7 +306,7 @@ export default function Header() {
                                 className="font-display font-semibold text-sm"
                                 style={{
                                   color:
-                                    activeCategory?.id === cat.id
+                                    effectiveCategory?.id === cat.id
                                       ? "var(--color-accent)"
                                       : "#333",
                                 }}
@@ -342,7 +326,7 @@ export default function Header() {
                               size={16}
                               style={{
                                 color:
-                                  activeCategory?.id === cat.id
+                                  effectiveCategory?.id === cat.id
                                     ? "var(--color-accent)"
                                     : "#bbb",
                               }}
@@ -369,9 +353,9 @@ export default function Header() {
                   {/* Right — category products */}
                   <div className="col-span-7">
                     <AnimatePresence mode="wait">
-                      {activeCategory && (
+                      {effectiveCategory && (
                         <motion.div
-                          key={activeCategory.id}
+                          key={effectiveCategory.id}
                           initial={{ opacity: 0, y: 6 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 6 }}
@@ -381,7 +365,7 @@ export default function Header() {
                             className="text-[10px] font-display uppercase tracking-[0.2em] mb-3"
                             style={{ color: "#999" }}
                           >
-                            {activeCategory.name}
+                            {effectiveCategory.name}
                           </p>
 
                           {productsLoading ? (
@@ -455,12 +439,12 @@ export default function Header() {
                             style={{ borderTop: "1px solid #e5e5e5" }}
                           >
                             <Link
-                              href={`/products?category_id=${activeCategory.id}`}
+                              href={`/products?category_id=${effectiveCategory.id}`}
                               onClick={() => setMegaOpen(false)}
                               className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-widest transition-opacity hover:opacity-75"
                               style={{ color: "var(--color-accent)" }}
                             >
-                              View All in {activeCategory.name}{" "}
+                              View All in {effectiveCategory.name}{" "}
                               <FiArrowRight size={11} />
                             </Link>
                             <button

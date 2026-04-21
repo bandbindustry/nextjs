@@ -1,16 +1,17 @@
 // src/sections/products/ProductsGrid.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import Container from "@/components/ui/Container";
 import AnimatedLine from "@/components/ui/AnimatedLine";
 import { clipUp, fadeIn } from "@/lib/motion";
 import { FiArrowRight, FiSearch, FiTag, FiX } from "react-icons/fi";
 import { getProducts, getProductCategories } from "@/services/product.service";
-import type { ApiProduct, ApiProductCategory } from "@/types/products";
+import type { ApiProduct } from "@/types/products";
 import ProductCard from "./ProductCard";
 
 const staggerContainer = {
@@ -59,32 +60,23 @@ export default function ProductsGrid() {
   const gridInView = useInView(gridRef, { once: true, margin: "-80px 0px" });
   const searchParams = useSearchParams();
 
-  const [products, setProducts] = useState<ApiProduct[]>([]);
-  const [categories, setCategories] = useState<ApiProductCategory[]>([]);
-  const [activeCat, setActiveCat] = useState<string>("all");
+  // Pre-select category from URL ?category_id= (read-only, no effect needed)
+  const urlCatId = searchParams.get("category_id");
+  const [activeCat, setActiveCat] = useState<string>(urlCatId ?? "all");
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
 
-  // Pre-select category from URL ?category_id=
-  useEffect(() => {
-    const catId = searchParams.get("category_id");
-    if (catId) setActiveCat(catId);
-  }, [searchParams]);
+  // ── Fetch categories ──
+  const { data: categories = [] } = useQuery({
+    queryKey: ["product-categories"],
+    queryFn: getProductCategories,
+  });
 
-  // Initial load
-  useEffect(() => {
-    async function load() {
-      setLoading(true);
-      const [cats, list] = await Promise.all([
-        getProductCategories(),
-        getProducts({ per_page: 100 }),
-      ]);
-      setCategories(cats);
-      setProducts(list?.data ?? []);
-      setLoading(false);
-    }
-    load();
-  }, []);
+  // ── Fetch all products ──
+  const { data: productsData, isLoading: loading } = useQuery({
+    queryKey: ["products", { per_page: 100 }],
+    queryFn: () => getProducts({ per_page: 100 }),
+  });
+  const products: ApiProduct[] = productsData?.data ?? [];
 
   // Filter by category + search
   const filtered = products.filter((p) => {

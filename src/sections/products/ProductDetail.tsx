@@ -1,7 +1,8 @@
 // src/sections/products/ProductDetail.tsx
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
@@ -270,26 +271,15 @@ function ProductDetailSkeleton() {
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function ProductDetail({ id }: { id: string }) {
   const { openModal } = useModal();
-  const [detail, setDetail] = useState<ApiProductDetail | null>(null);
-  const [loading, setLoading] = useState(true);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
-  useEffect(() => {
-    if (!id) return;
-    let cancelled = false;
-    async function load() {
-      const d = await getProductById(id);
-      if (!cancelled) {
-        setDetail(d);
-        setLoading(false);
-      }
-    }
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [id]);
+  // ── Fetch product detail via TanStack Query ──
+  const { data: detail, isLoading: loading } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => getProductById(id),
+    enabled: !!id,
+  });
 
   const product = detail?.product_details ?? null;
   const related = detail?.related_products ?? [];
