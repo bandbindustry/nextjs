@@ -5,6 +5,7 @@ import { useInView } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
+import Image from "next/image";
 import "swiper/css";
 import "swiper/css/autoplay";
 import Container from "@/components/ui/Container";
@@ -14,33 +15,38 @@ import { FiChevronLeft, FiChevronRight, FiArrowUpRight } from "react-icons/fi";
 const technologies = [
   {
     id: 1,
-    label: "CNC Precision Machining",
-    image: "https://picsum.photos/seed/cnc-machining/800/500",
+    label: "Fast Chucks",
+    description:
+      "High-speed chuck system for rapid tube loading and unloading, maximising throughput on every production run.",
+    image: "/images/FastChucks.webp",
   },
   {
     id: 2,
-    label: "Quality Control Lab",
-    image: "https://picsum.photos/seed/quality-lab/800/500",
+    label: "Intelligent Gas Pressure Control",
+    description:
+      "Automated assist-gas regulation that adapts in real time to material thickness for clean, burr-free cuts.",
+    image: "/images/IntelligentGasPressureControlling.webp",
   },
   {
     id: 3,
-    label: "ISO-Certified Processes",
-    image: "https://picsum.photos/seed/iso-process/800/500",
+    label: "One-Second Edge Finding",
+    description:
+      "Laser-based edge detection that locates workpiece boundaries in under a second, eliminating manual setup.",
+    image: "/images/One-SecondEdgeFinding.webp",
   },
   {
     id: 4,
-    label: "Advanced Tooling",
-    image: "https://picsum.photos/seed/advanced-tooling/800/500",
+    label: "Over-Edge Protection",
+    description:
+      "Intelligent collision-avoidance that safeguards the cutting head when traversing complex profiles and edges.",
+    image: "/images/OverEdgeProtection.webp",
   },
   {
     id: 5,
-    label: "Custom Fabrication",
-    image: "https://picsum.photos/seed/fabrication/800/500",
-  },
-  {
-    id: 6,
-    label: "Surface Treatment",
-    image: "https://picsum.photos/seed/surface-treatment/800/500",
+    label: "Remnants Layout",
+    description:
+      "Smart nesting algorithm that maximises material utilisation by optimally placing parts on sheet remnants.",
+    image: "/images/RemnantsLayout.webp",
   },
 ];
 
@@ -218,7 +224,7 @@ export default function CoreTechnologiesSection() {
                 <div
                   className="group relative overflow-hidden rounded-sm"
                   style={{
-                    aspectRatio: "4/4.8",
+                    aspectRatio: "4/3",
                     border: "1px solid var(--color-light-border)",
                     background: "var(--color-light-bg)",
                     transform: isActive ? "translateY(0)" : "translateY(12px)",
@@ -227,13 +233,12 @@ export default function CoreTechnologiesSection() {
                 >
                   {/* Image */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <img
+                    <Image
                       src={tech.image}
                       alt={tech.label}
-                      width={800}
-                      height={500}
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      fill
+                      sizes="(max-width: 640px) 90vw, (max-width: 900px) 60vw, (max-width: 1200px) 45vw, 33vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
 
@@ -314,8 +319,7 @@ export default function CoreTechnologiesSection() {
                         maxWidth: "28ch",
                       }}
                     >
-                      Advanced capability designed for repeatable accuracy,
-                      efficient production, and dependable output.
+                      {tech.description}
                     </p>
                   </div>
                 </div>

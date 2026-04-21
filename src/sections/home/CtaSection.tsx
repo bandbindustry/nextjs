@@ -13,9 +13,10 @@ interface CtaSectionProps {
 }
 
 const promises = [
-  "No-obligation custom quote",
+  "Factory-direct pricing — no middlemen",
+  "Custom laser configurations available",
   "Response within 24 hours",
-  "Dedicated project engineer",
+  "On-site installation & training support",
 ];
 
 export default function CtaSection({ pad = "light" }: CtaSectionProps) {
@@ -79,7 +80,7 @@ export default function CtaSection({ pad = "light" }: CtaSectionProps) {
                 className="font-display font-semibold uppercase tracking-[0.2em]"
                 style={{ fontSize: "0.7rem", color: T.faint }}
               >
-                Let&apos;s Work Together
+                Manufacturer &amp; Seller
               </span>
             </div>
 
@@ -91,9 +92,9 @@ export default function CtaSection({ pad = "light" }: CtaSectionProps) {
                 color: T.text,
               }}
             >
-              Ready to Start
+              Get the Right
               <br />
-              <span style={{ color: T.accent }}>Your Project?</span>
+              <span style={{ color: T.accent }}>Laser Cutting Machine</span>
             </h2>
 
             {/* Animated underline */}
@@ -113,8 +114,10 @@ export default function CtaSection({ pad = "light" }: CtaSectionProps) {
               className="text-base leading-relaxed mb-8"
               style={{ color: T.muted, maxWidth: "46ch" }}
             >
-              Talk to our engineering team and get a custom quote tailored to
-              your exact requirements — no obligation, no guesswork.
+              We manufacture and supply fiber laser cutting machines, tube laser
+              cutters, and sheet metal laser systems — direct from our factory
+              in Gujarat. Tell us your material, thickness, and volume and
+              we&apos;ll spec the right machine for you.
             </p>
 
             {/* Promise list */}
@@ -138,10 +141,10 @@ export default function CtaSection({ pad = "light" }: CtaSectionProps) {
             {/* CTAs */}
             <div className="flex flex-wrap gap-4">
               <Button href="/contact" variant="primary" theme={pad}>
-                Contact Us Today
+                Request a Quote
               </Button>
               <Button href="/products" variant="outline" theme={pad}>
-                Browse Products
+                View Machines
               </Button>
             </div>
           </motion.div>
@@ -182,14 +185,15 @@ export default function CtaSection({ pad = "light" }: CtaSectionProps) {
                   color: T.text,
                 }}
               >
-                Why Choose B&B Industries?
+                Why Buy Direct from B&B?
               </p>
               <p
                 className="text-sm leading-relaxed mb-6"
                 style={{ color: T.muted, maxWidth: "38ch" }}
               >
-                Over two decades of precision manufacturing — serving the most
-                demanding industries with zero compromise on quality.
+                As a manufacturer, we offer factory-direct pricing, full
+                customisation, and end-to-end support — from machine selection
+                and installation to operator training and after-sales service.
               </p>
 
               {/* CTA link */}

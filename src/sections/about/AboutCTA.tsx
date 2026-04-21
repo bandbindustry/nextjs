@@ -166,7 +166,7 @@ export default function AboutCTA() {
               className="eyebrow"
               style={{ margin: 0, color: "var(--color-light-faint)" }}
             >
-              Work With Us
+              Manufacturer & Direct Seller
             </span>
             <span
               className="h-px w-8"
@@ -183,7 +183,7 @@ export default function AboutCTA() {
               color: "var(--color-light-text)",
             }}
           >
-            Ready to Start Your{" "}
+            Find the Right Laser Cutting{" "}
             <span
               style={{
                 color: "var(--color-light-accent)",
@@ -191,7 +191,7 @@ export default function AboutCTA() {
                 paddingBottom: "2px",
               }}
             >
-              Next Project?
+              Machine for You
             </span>
           </motion.h2>
 
@@ -201,8 +201,11 @@ export default function AboutCTA() {
             className="text-base leading-relaxed mb-8"
             style={{ color: "var(--color-light-muted)" }}
           >
-            Tell us what you need. Our engineering team will review your
-            requirements and get back with a detailed quote within 24 hours.
+            B&amp;B Industries manufactures and sells fiber laser cutting
+            machines, tube laser cutters, and sheet metal laser systems — built
+            in Gujarat, shipped across India and beyond. Share your cutting
+            requirements and our team will recommend the right machine and
+            configuration within 24 hours.
           </motion.p>
 
           {/* Buttons */}
@@ -211,10 +214,10 @@ export default function AboutCTA() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Button href="/contact" variant="primary" theme="light">
-              Get a Free Quote <FiArrowRight size={13} />
+              Request a Machine Quote <FiArrowRight size={13} />
             </Button>
             <Button href="/products" variant="outline" theme="light">
-              Explore Products
+              View Our Machines
             </Button>
           </motion.div>
         </motion.div>
