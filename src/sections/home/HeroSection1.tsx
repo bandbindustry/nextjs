@@ -145,7 +145,7 @@ export default function HeroSection() {
               color: "var(--color-text-faint)",
             }}
           >
-            Precision Manufacturing Since 1998
+            Precision Manufacturing
           </p>
           <span
             style={{

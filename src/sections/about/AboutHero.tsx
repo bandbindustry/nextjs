@@ -29,7 +29,6 @@ const slideIn: Variants = {
 };
 
 const stats = [
-  { value: "1998", label: "Established" },
   { value: "25+", label: "Years Active" },
   { value: "500+", label: "Projects Done" },
   { value: "ISO", label: "Certified" },
@@ -180,9 +179,9 @@ export default function AboutHero() {
                 maxWidth: "44ch",
               }}
             >
-              Since 1998, B &amp; B Industries has delivered
-              precision-engineered components and industrial solutions trusted
-              by manufacturers across Gujarat and beyond.
+              B &amp; B Industries has delivered precision-engineered components
+              and industrial solutions trusted by manufacturers across Gujarat
+              and beyond.
             </motion.p>
 
             {/* ── Stat strip ── */}

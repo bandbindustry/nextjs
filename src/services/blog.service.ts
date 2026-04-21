@@ -134,8 +134,6 @@ export async function getBlogBySlug(slug: string): Promise<BlogViewResponse> {
   try {
     const response = await api.post(endpoints.BLOG_VIEW, { slug });
     const res = tryDecrypt(response.data) as BlogViewResponse;
-    console.log("res:>>> ", res);
-
     return res;
   } catch (error) {
     console.error("Error fetching blog:", error);

@@ -173,8 +173,8 @@ function ContentSectionRenderer({ section }: { section: ContentSection }) {
             src={src}
             alt={section.alt ?? ""}
             loading="lazy"
-            className="w-full object-cover"
-            style={{ maxHeight: 480, display: "block" }}
+            className="w-full object-contain"
+            style={{ maxHeight: 480, display: "block", background: "#f8f8f8" }}
           />
         </div>
         {section.caption && (
@@ -289,13 +289,15 @@ export default function ProductDetail({ id }: { id: string }) {
     : [];
 
   const priceNum = product ? parseFloat(product.price) : NaN;
-  const formattedPrice = isNaN(priceNum)
-    ? null
-    : new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-        maximumFractionDigits: 0,
-      }).format(priceNum);
+  // Only show price if it's a valid positive number
+  const formattedPrice =
+    isNaN(priceNum) || priceNum <= 0
+      ? null
+      : new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumFractionDigits: 0,
+        }).format(priceNum);
 
   return (
     <>
@@ -357,9 +359,9 @@ export default function ProductDetail({ id }: { id: string }) {
               transition={{ duration: 0.5, ease: EASE }}
             >
               {/* ── Top grid: images + info ── */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14">
-                {/* ── Image slider ── */}
-                <div className="flex flex-col gap-3">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14 lg:items-start">
+                {/* ── Image slider — sticky on desktop ── */}
+                <div className="flex flex-col gap-3 lg:sticky lg:top-24">
                   {images.length > 0 ? (
                     <>
                       {/* Main swiper */}
@@ -398,7 +400,8 @@ export default function ProductDetail({ id }: { id: string }) {
                                   src={img}
                                   alt={`${product.name} — image ${i + 1}`}
                                   loading={i === 0 ? "eager" : "lazy"}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-contain"
+                                  style={{ background: "#f8f8f8" }}
                                 />
                               </div>
                             </SwiperSlide>
@@ -441,24 +444,30 @@ export default function ProductDetail({ id }: { id: string }) {
                         </button>
                       </div>
 
-                      {/* Thumbnails — small fixed height */}
+                      {/* Thumbnails — fixed 72×72 px per slide, left-aligned */}
                       {images.length > 1 && (
                         <Swiper
                           modules={[FreeMode, Thumbs]}
                           onSwiper={setThumbsSwiper}
                           spaceBetween={6}
-                          slidesPerView={Math.min(images.length, 6)}
+                          slidesPerView="auto"
                           freeMode
                           watchSlidesProgress
                           className="w-full"
                         >
                           {images.map((img, i) => (
-                            <SwiperSlide key={i} className="cursor-pointer">
+                            <SwiperSlide
+                              key={i}
+                              className="cursor-pointer"
+                              style={{ width: "72px", flexShrink: 0 }}
+                            >
                               <div
                                 className="rounded-sm overflow-hidden"
                                 style={{
-                                  height: "56px",
+                                  width: "72px",
+                                  height: "72px",
                                   border: "1px solid var(--color-light-border)",
+                                  background: "#f8f8f8",
                                 }}
                               >
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -466,7 +475,7 @@ export default function ProductDetail({ id }: { id: string }) {
                                   src={img}
                                   alt={`Thumb ${i + 1}`}
                                   loading="lazy"
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-contain"
                                 />
                               </div>
                             </SwiperSlide>
@@ -640,7 +649,7 @@ export default function ProductDetail({ id }: { id: string }) {
 
               {/* ── Content sections ── */}
               {contentSections.length > 0 && (
-                <div className="mb-14">
+                <div className="mb-14 ">
                   <div
                     className="flex items-center gap-3 mb-6"
                     style={{

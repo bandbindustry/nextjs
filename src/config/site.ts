@@ -9,15 +9,17 @@ export const siteConfig = {
   url: SITE_URL,
   contact: {
     email: "info@bandbindustries.com",
-    phone: "+91 00000 00000",
-    whatsapp: "919000000000",
-    address: "Jamnagar, Gujarat, India",
+    phone: "+91 695326623",
+    whatsapp: "91695326623",
+    address:
+      "Ploat No.13, Rajpath Industrials Area, Pal Pipaliya Village, B/h Shaper (Veraval), Ta. Lodhika, Dist. Rajkot - 360311",
   },
   location: "",
   social: {
-    linkedin: "https://www.linkedin.com/company/b-and-b-industries",
-    youtube: "https://www.youtube.com/@bandbindustries",
-    instagram: "https://www.instagram.com/bandbindustries",
+    facebook: "https://www.facebook.com/share/1CLzugLECJ/",
+    youtube: "https://www.youtube.com/@bbindustries-1",
+    instagram: "https://www.instagram.com/bandb_industry",
+
     // whatsapp is built from contact.whatsapp — no separate field needed
   },
 };

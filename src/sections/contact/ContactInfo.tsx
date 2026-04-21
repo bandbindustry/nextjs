@@ -5,35 +5,42 @@ import AnimatedSection from "@/components/ui/AnimatedSection";
 import AnimatedLine from "@/components/ui/AnimatedLine";
 import { FiMapPin, FiPhone, FiMail, FiClock } from "react-icons/fi";
 import { siteConfig } from "@/config/site";
-
-const info = [
-  {
-    icon: FiMapPin,
-    label: "Address",
-    value: siteConfig.contact.address,
-    sub: "Gujarat, India",
-  },
-  {
-    icon: FiPhone,
-    label: "Phone",
-    value: siteConfig.contact.phone,
-    sub: "Mon–Sat, 9am–6pm IST",
-  },
-  {
-    icon: FiMail,
-    label: "Email",
-    value: siteConfig.contact.email,
-    sub: "We reply within 24 hours",
-  },
-  {
-    icon: FiClock,
-    label: "Working Hours",
-    value: "Mon – Sat",
-    sub: "9:00 AM – 6:00 PM IST",
-  },
-];
+import { useSettings } from "@/hooks/useSettings";
 
 export default function ContactInfo() {
+  const settings = useSettings();
+
+  const address = settings.contact_address || siteConfig.contact.address;
+  const phone = settings.contact_phone_number || siteConfig.contact.phone;
+  const email = settings.contact_email || siteConfig.contact.email;
+
+  const info = [
+    {
+      icon: FiMapPin,
+      label: "Address",
+      value: address,
+      sub: "Gujarat, India",
+    },
+    {
+      icon: FiPhone,
+      label: "Phone",
+      value: phone,
+      sub: "Mon–Sat, 9am–6pm IST",
+    },
+    {
+      icon: FiMail,
+      label: "Email",
+      value: email,
+      sub: "We reply within 24 hours",
+    },
+    {
+      icon: FiClock,
+      label: "Working Hours",
+      value: "Mon – Sat",
+      sub: "9:00 AM – 6:00 PM IST",
+    },
+  ];
+
   return (
     <section className="section-pad" style={{ background: "var(--color-bg)" }}>
       <Container>

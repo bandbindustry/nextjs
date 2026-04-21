@@ -4,9 +4,12 @@ import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import Container from "@/components/ui/Container";
 import { navLinks, siteConfig } from "@/config/site";
-import { productCategories } from "@/data/products";
+import { useSettings } from "@/hooks/useSettings";
+import { getProductCategories } from "@/services/product.service";
+import { encryptUrlParam } from "@/utils/encryption";
 import {
   FiMail,
   FiPhone,
@@ -19,32 +22,10 @@ import {
   FaYoutube,
   FaInstagram,
   FaWhatsapp,
+  FaFacebook,
 } from "react-icons/fa";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-
-const socialLinks = [
-  {
-    icon: <FaLinkedinIn size={14} />,
-    href: siteConfig.social.linkedin,
-    label: "LinkedIn",
-  },
-  {
-    icon: <FaYoutube size={14} />,
-    href: siteConfig.social.youtube,
-    label: "YouTube",
-  },
-  {
-    icon: <FaInstagram size={14} />,
-    href: siteConfig.social.instagram,
-    label: "Instagram",
-  },
-  {
-    icon: <FaWhatsapp size={14} />,
-    href: `https://wa.me/${siteConfig.contact.whatsapp ?? "919000000000"}`,
-    label: "WhatsApp",
-  },
-];
 
 const stagger = {
   hidden: {},
@@ -62,7 +43,7 @@ function ColHeading({ children }: { children: React.ReactNode }) {
       <h4
         className="font-display font-semibold uppercase tracking-[0.18em]"
         style={{
-          fontSize: "10px",
+          fontSize: "11px",
           color: "var(--color-text)",
         }}
       >
@@ -79,6 +60,46 @@ function ColHeading({ children }: { children: React.ReactNode }) {
 export default function Footer() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px 0px" });
+  const settings = useSettings();
+
+  // Product categories from API (shared query key with Header + ProductsGrid)
+  const { data: categories = [] } = useQuery({
+    queryKey: ["product-categories"],
+    queryFn: getProductCategories,
+    staleTime: 10 * 60 * 1000,
+  });
+
+  // Always show social links — API value takes priority, siteConfig as fallback
+  const socialLinks = [
+    {
+      icon: <FaFacebook size={14} />,
+      href: settings.social_link_facebook || siteConfig.social.facebook,
+      label: "LinkedIn",
+    },
+    {
+      icon: <FaYoutube size={14} />,
+      href: settings.social_link_youtube || siteConfig.social.youtube,
+      label: "YouTube",
+    },
+    {
+      icon: <FaInstagram size={14} />,
+      href: settings.social_link_instagram || siteConfig.social.instagram,
+      label: "Instagram",
+    },
+    {
+      icon: <FaWhatsapp size={14} />,
+      href: `https://wa.me/${settings.whatsapp_phone_number || siteConfig.contact.whatsapp}`,
+      label: "WhatsApp",
+    },
+  ];
+
+  const address = settings.contact_address || siteConfig.contact.address;
+  const phone = settings.contact_phone_number || siteConfig.contact.phone;
+  const email = settings.contact_email || siteConfig.contact.email;
+  const whatsapp =
+    settings.whatsapp_phone_number ||
+    siteConfig.contact.whatsapp ||
+    "919000000000";
 
   return (
     <footer
@@ -129,21 +150,21 @@ export default function Footer() {
           <motion.div variants={fadeUp} className="flex flex-col gap-5">
             <Link href="/" className="inline-flex items-center gap-3">
               <div
-                className="w-9 h-9 rounded-sm overflow-hidden flex items-center justify-center shrink-0"
-                style={{
-                  background: "var(--color-surface)",
-                  border: "1px solid var(--color-border)",
-                }}
+                className="rounded-sm overflow-hidden flex items-center justify-center shrink-0"
+                // style={{
+                //   background: "var(--color-surface)",
+                //   border: "1px solid var(--color-border)",
+                // }}
               >
                 <Image
                   src="/logo/B&BLogo.png"
                   alt={siteConfig.name}
-                  width={28}
-                  height={28}
+                  width={98}
+                  height={98}
                   className="object-contain brightness-0 invert"
                 />
               </div>
-              <div className="flex flex-col leading-none">
+              {/* <div className="flex flex-col leading-none">
                 <span
                   className="font-display font-bold text-sm tracking-wide"
                   style={{ color: "var(--color-text)" }}
@@ -160,12 +181,12 @@ export default function Footer() {
                 >
                   Industries
                 </span>
-              </div>
+              </div> */}
             </Link>
 
             <p
-              className="text-sm leading-relaxed"
-              style={{ color: "var(--color-text-muted)", maxWidth: "28ch" }}
+              className="text-base md:text-base leading-relaxed"
+              style={{ color: "var(--color-text-muted)", maxWidth: "58ch" }}
             >
               {siteConfig.description}
             </p>
@@ -210,7 +231,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="flex items-center gap-2 text-xs transition-colors duration-150"
+                    className="flex items-center gap-2 text-base transition-colors duration-150"
                     style={{ color: "var(--color-text-muted)" }}
                     onMouseEnter={(e) =>
                       ((e.currentTarget as HTMLElement).style.color =
@@ -232,15 +253,39 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* ── Col 3: Products ── */}
+          {/* ── Col 3: Products (from API) ── */}
           <motion.div variants={fadeUp}>
             <ColHeading>Products</ColHeading>
             <ul className="space-y-3">
-              {productCategories.map((cat) => (
-                <li key={cat.id}>
+              {categories.length > 0 ? (
+                categories.map((cat) => (
+                  <li key={cat.id}>
+                    <Link
+                      href={`/products?category=${encryptUrlParam(cat.id)}`}
+                      className="flex items-center gap-2 text-base leading-snug transition-colors duration-150"
+                      style={{ color: "var(--color-text-muted)" }}
+                      onMouseEnter={(e) =>
+                        ((e.currentTarget as HTMLElement).style.color =
+                          "var(--color-accent)")
+                      }
+                      onMouseLeave={(e) =>
+                        ((e.currentTarget as HTMLElement).style.color =
+                          "var(--color-text-muted)")
+                      }
+                    >
+                      <span
+                        className="w-1 h-1 rounded-full shrink-0"
+                        style={{ background: "var(--color-text-faint)" }}
+                      />
+                      {cat.name}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li>
                   <Link
-                    href={`/products/${cat.id}`}
-                    className="flex items-center gap-2 text-xs leading-snug transition-colors duration-150"
+                    href="/products"
+                    className="flex items-center gap-2 text-sm transition-colors duration-150"
                     style={{ color: "var(--color-text-muted)" }}
                     onMouseEnter={(e) =>
                       ((e.currentTarget as HTMLElement).style.color =
@@ -255,10 +300,10 @@ export default function Footer() {
                       className="w-1 h-1 rounded-full shrink-0"
                       style={{ background: "var(--color-text-faint)" }}
                     />
-                    {cat.name}
+                    View All Products
                   </Link>
                 </li>
-              ))}
+              )}
             </ul>
           </motion.div>
 
@@ -268,24 +313,24 @@ export default function Footer() {
             <ul className="space-y-4">
               {[
                 {
-                  icon: <FiMapPin size={13} />,
-                  href: `https://maps.google.com/?q=${encodeURIComponent(siteConfig.contact.address)}`,
-                  label: siteConfig.contact.address,
+                  icon: <FiMapPin size={14} />,
+                  href: `https://maps.google.com/?q=${encodeURIComponent(address)}`,
+                  label: address,
                   external: true,
                 },
                 {
-                  icon: <FiPhone size={13} />,
-                  href: `tel:${siteConfig.contact.phone}`,
-                  label: siteConfig.contact.phone,
+                  icon: <FiPhone size={14} />,
+                  href: `tel:${phone}`,
+                  label: phone,
                 },
                 {
-                  icon: <FiMail size={13} />,
-                  href: `mailto:${siteConfig.contact.email}`,
-                  label: siteConfig.contact.email,
+                  icon: <FiMail size={14} />,
+                  href: `mailto:${email}`,
+                  label: email,
                 },
                 {
-                  icon: <FaWhatsapp size={13} />,
-                  href: `https://wa.me/${siteConfig.contact.whatsapp ?? "919000000000"}`,
+                  icon: <FaWhatsapp size={14} />,
+                  href: `https://wa.me/${whatsapp}`,
                   label: "Chat on WhatsApp",
                   external: true,
                   accent: true,
@@ -296,7 +341,7 @@ export default function Footer() {
                     href={c.href}
                     target={c.external ? "_blank" : undefined}
                     rel={c.external ? "noopener noreferrer" : undefined}
-                    className="flex items-start gap-2.5 text-xs leading-snug transition-colors duration-150"
+                    className="flex items-start gap-2.5 text-base leading-snug transition-colors duration-150"
                     style={{
                       color: c.accent
                         ? "var(--color-accent)"
@@ -376,8 +421,11 @@ export default function Footer() {
 
             <div className="flex items-center gap-4 flex-wrap justify-center">
               {[
+                { label: "Faq", href: "/faq" },
                 { label: "Privacy Policy", href: "/privacy" },
                 { label: "Terms of Use", href: "/terms" },
+
+                { label: "Payment", href: "/payment" },
               ].map(({ label, href }) => (
                 <Link
                   key={label}

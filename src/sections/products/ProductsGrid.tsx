@@ -3,7 +3,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import Container from "@/components/ui/Container";
@@ -13,6 +13,7 @@ import { FiArrowRight, FiSearch, FiTag, FiX } from "react-icons/fi";
 import { getProducts, getProductCategories } from "@/services/product.service";
 import type { ApiProduct } from "@/types/products";
 import ProductCard from "./ProductCard";
+import { decryptUrlParam, encryptUrlParam } from "@/utils/encryption";
 
 const staggerContainer = {
   hidden: {},
@@ -59,11 +60,30 @@ export default function ProductsGrid() {
   const gridRef = useRef<HTMLDivElement>(null);
   const gridInView = useInView(gridRef, { once: true, margin: "-80px 0px" });
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  // Pre-select category from URL ?category_id= (read-only, no effect needed)
-  const urlCatId = searchParams.get("category_id");
+  // Pre-select category from URL ?category= (encrypted) or ?category_id= (legacy plain)
+  const urlCatParam =
+    searchParams.get("category") ?? searchParams.get("category_id");
+  const urlCatId = urlCatParam ? decryptUrlParam(urlCatParam) : null;
   const [activeCat, setActiveCat] = useState<string>(urlCatId ?? "all");
   const [search, setSearch] = useState("");
+
+  /** Update both local state and URL param when category changes */
+  function selectCategory(catId: string) {
+    setActiveCat(catId);
+    const params = new URLSearchParams(searchParams.toString());
+    if (catId === "all") {
+      params.delete("category");
+      params.delete("category_id");
+    } else {
+      params.delete("category_id"); // remove legacy param
+      params.set("category", encryptUrlParam(catId));
+    }
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? `?${qs}` : ""}`, { scroll: false });
+  }
 
   // ── Fetch categories ──
   const { data: categories = [] } = useQuery({
@@ -214,7 +234,7 @@ export default function ProductsGrid() {
             {/* Category tabs */}
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => setActiveCat("all")}
+                onClick={() => selectCategory("all")}
                 className="px-4 py-2 rounded-sm text-xs font-display font-semibold uppercase tracking-wider transition-all duration-200"
                 style={{
                   background:
@@ -234,7 +254,7 @@ export default function ProductsGrid() {
               {categories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setActiveCat(cat.id)}
+                  onClick={() => selectCategory(cat.id)}
                   className="px-4 py-2 rounded-sm text-xs font-display font-semibold uppercase tracking-wider transition-all duration-200"
                   style={{
                     background:
@@ -322,7 +342,7 @@ export default function ProductsGrid() {
               <button
                 onClick={() => {
                   setSearch("");
-                  setActiveCat("all");
+                  selectCategory("all");
                 }}
                 className="mt-4 px-5 py-2.5 text-xs font-display font-semibold uppercase tracking-wider rounded-sm transition-all duration-200"
                 style={{

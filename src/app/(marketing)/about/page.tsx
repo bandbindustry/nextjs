@@ -32,9 +32,9 @@ export default function AboutPage() {
       <AboutHero />
       {/* <AboutStats /> */}
       <AboutStory />
-      <AboutTimeline />
+      {/* <AboutTimeline /> */}
       <AboutValues />
-      <AboutCertifications />
+      {/* <AboutCertifications /> */}
       {/* <AboutTeam /> */}
       <AboutCTA />
     </main>

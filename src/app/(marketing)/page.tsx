@@ -13,7 +13,7 @@ import CoreTechnologiesSection from "@/sections/home/CoreTechnologiesSection";
 export const metadata: Metadata = createMetadata({
   title: "Precision Manufacturing & Industrial Solutions",
   description:
-    "B and B Industries delivers world-class precision-engineered components, CNC machinery, and industrial solutions across Gujarat and India. ISO-certified. Est. 1998.",
+    "B and B Industries delivers world-class precision-engineered components, CNC machinery, and industrial solutions across Gujarat and India. ISO-certified.",
   keywords: [
     "precision manufacturing Gujarat",
     "CNC components India",

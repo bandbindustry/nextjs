@@ -31,8 +31,8 @@ export default function ServicePage() {
   return (
     <main>
       <ServiceHero />
-      <ServiceStats />
-      <ServiceSkills />
+      {/* <ServiceStats /> */}
+      {/* <ServiceSkills /> */}
       <ServiceOnlineService />
       <ServiceTopServices />
       <ServiceFeatures />

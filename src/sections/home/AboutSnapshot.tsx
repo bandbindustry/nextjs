@@ -66,21 +66,6 @@ export default function AboutSnapshot() {
               />
 
               {/* Est. tag */}
-              <div
-                className="absolute top-4 left-4 px-3 py-1.5 rounded-sm"
-                style={{ background: "var(--color-light-accent)" }}
-              >
-                <p
-                  className="font-display font-bold uppercase"
-                  style={{
-                    fontSize: "11px",
-                    letterSpacing: "0.15em",
-                    color: "#ffffff",
-                  }}
-                >
-                  Est. 1998
-                </p>
-              </div>
 
               {/* ISO badge */}
               <div

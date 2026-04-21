@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import Container from "@/components/ui/Container";
@@ -21,6 +21,7 @@ import Button from "../ui/Button";
 import { getProductCategories, getProducts } from "@/services/product.service";
 import type { ApiProductCategory } from "@/types/products";
 import { useModal } from "@/context/ModalContext";
+import { encryptUrlParam } from "@/utils/encryption";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -33,6 +34,7 @@ function isLightBgPage(pathname: string) {
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { openModal } = useModal();
 
@@ -300,6 +302,12 @@ export default function Header() {
                                   : "1px solid transparent",
                             }}
                             onMouseEnter={() => setActiveCategory(cat)}
+                            onClick={() => {
+                              setMegaOpen(false);
+                              router.push(
+                                `/products?category=${encryptUrlParam(cat.id)}`,
+                              );
+                            }}
                           >
                             <div>
                               <p
@@ -439,7 +447,7 @@ export default function Header() {
                             style={{ borderTop: "1px solid #e5e5e5" }}
                           >
                             <Link
-                              href={`/products?category_id=${effectiveCategory.id}`}
+                              href={`/products?category=${encryptUrlParam(effectiveCategory.id)}`}
                               onClick={() => setMegaOpen(false)}
                               className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-widest transition-opacity hover:opacity-75"
                               style={{ color: "var(--color-accent)" }}
@@ -541,7 +549,7 @@ export default function Header() {
                         {categories.map((cat) => (
                           <Link
                             key={cat.id}
-                            href={`/products?category_id=${cat.id}`}
+                            href={`/products?category=${encryptUrlParam(cat.id)}`}
                             onClick={() => setMobileOpen(false)}
                             className="p-3 rounded-sm text-xs font-display transition-all duration-150"
                             style={{
