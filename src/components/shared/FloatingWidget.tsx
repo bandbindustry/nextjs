@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { siteConfig } from "@/config/site";
+import { useSettings } from "@/hooks/useSettings";
 import {
   FiMessageCircle,
   FiMail,
@@ -26,45 +26,49 @@ interface WidgetItem {
   accentColor?: string;
 }
 
-const ITEMS: WidgetItem[] = [
-  {
-    id: "chat",
-    icon: <FiMessageCircle size={18} />,
-    label: "Talk",
-    action: "chat",
-    accentColor: "var(--color-accent)",
-  },
-  {
-    id: "email",
-    icon: <FiMail size={18} />,
-    label: "Email",
-    action: "email",
-    href: `mailto:${siteConfig.contact.email}`,
-    accentColor: "var(--color-accent)",
-  },
-  {
-    id: "whatsapp",
-    icon: <FaWhatsapp size={18} />,
-    label: "WhatsApp",
-    action: "whatsapp",
-    href: `https://wa.me/${siteConfig.contact.whatsapp ?? "919000000000"}`,
-    accentColor: "#22c55e",
-  },
-  {
-    id: "inquiry",
-    icon: <RiSendPlaneLine size={18} />,
-    label: "Inquiry",
-    action: "inquiry",
-    href: "/contact",
-    accentColor: "var(--color-accent)",
-  },
-];
-
 export default function FloatingWidget() {
+  const settings = useSettings();
   const [visible, setVisible] = useState(false);
   const [showTop, setShowTop] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  const ITEMS: WidgetItem[] = useMemo(
+    () => [
+      {
+        id: "chat",
+        icon: <FiMessageCircle size={18} />,
+        label: "Talk",
+        action: "chat",
+        accentColor: "var(--color-accent)",
+      },
+      {
+        id: "email",
+        icon: <FiMail size={18} />,
+        label: "Email",
+        action: "email",
+        href: `mailto:${settings.contact_email}`,
+        accentColor: "var(--color-accent)",
+      },
+      {
+        id: "whatsapp",
+        icon: <FaWhatsapp size={18} />,
+        label: "WhatsApp",
+        action: "whatsapp",
+        href: `https://wa.me/${settings.whatsapp_phone_number || "919000000000"}`,
+        accentColor: "#22c55e",
+      },
+      {
+        id: "inquiry",
+        icon: <RiSendPlaneLine size={18} />,
+        label: "Inquiry",
+        action: "inquiry",
+        href: "/contact",
+        accentColor: "var(--color-accent)",
+      },
+    ],
+    [settings.contact_email, settings.whatsapp_phone_number],
+  );
 
   // ── Scroll detection ──
   useEffect(() => {
@@ -272,8 +276,9 @@ export default function FloatingWidget() {
         {chatOpen && (
           <ChatPopup
             onClose={() => setChatOpen(false)}
-            phone={siteConfig.contact.phone}
-            email={siteConfig.contact.email}
+            phone={settings.contact_phone_number}
+            email={settings.contact_email}
+            whatsapp={settings.whatsapp_phone_number || "919000000000"}
           />
         )}
       </AnimatePresence>
@@ -286,10 +291,12 @@ function ChatPopup({
   onClose,
   phone,
   email,
+  whatsapp,
 }: {
   onClose: () => void;
   phone: string;
   email: string;
+  whatsapp: string;
 }) {
   const links = [
     {
@@ -297,7 +304,7 @@ function ChatPopup({
       iconBg: "#22c55e",
       label: "WhatsApp",
       sub: "Chat with us now",
-      href: `https://wa.me/${siteConfig.contact.whatsapp ?? "919000000000"}`,
+      href: `https://wa.me/${whatsapp}`,
       target: "_blank" as const,
       hoverColor: "#22c55e",
     },
