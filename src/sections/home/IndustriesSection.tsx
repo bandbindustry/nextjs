@@ -2,9 +2,10 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import type { Variants } from "framer-motion";
 import Container from "@/components/ui/Container";
 import AnimatedSection from "@/components/ui/AnimatedSection";
-import { staggerContainer, fadeUp } from "@/lib/motion";
+import { staggerContainer } from "@/lib/motion";
 import {
   TbDroplet,
   TbCar,
@@ -18,25 +19,28 @@ import {
 } from "react-icons/tb";
 import type { IconType } from "react-icons";
 
-const industries: {
-  label: string;
-  icon: IconType;
-}[] = [
-  { label: "Oil & Gas", icon: TbDroplet },
-  { label: "Automotive", icon: TbCar },
-  { label: "Jewelry", icon: TbDiamond },
-  { label: "Aerospace", icon: TbPlane },
-  { label: "Electronics", icon: TbBolt },
-  { label: "Construction", icon: TbBuildingFactory2 },
-  { label: "Marine", icon: TbShip },
-  { label: "Agriculture", icon: TbTractor },
-  { label: "Defense", icon: TbShield },
+const EASE = [0.16, 1, 0.3, 1] as const; // ← fixes the TS error
+
+const industries: { label: string; icon: IconType; desc: string }[] = [
+  { label: "Oil & Gas",     icon: TbDroplet,          desc: "Valves, fittings & pipeline components" },
+  { label: "Automotive",   icon: TbCar,               desc: "Precision fasteners & engine parts" },
+  { label: "Jewelry",      icon: TbDiamond,           desc: "Fine metal castings & settings" },
+  { label: "Aerospace",    icon: TbPlane,             desc: "High-tolerance structural parts" },
+  { label: "Electronics",  icon: TbBolt,              desc: "Micro-components & shielding" },
+  { label: "Construction", icon: TbBuildingFactory2,  desc: "Structural bolts & anchor systems" },
+  { label: "Marine",       icon: TbShip,              desc: "Corrosion-resistant alloy parts" },
+  { label: "Agriculture",  icon: TbTractor,           desc: "Heavy-duty machinery components" },
+  { label: "Defense",      icon: TbShield,            desc: "MIL-spec certified hardware" },
 ];
 
-const getIndustryImage = (label: string) =>
-  `https://picsum.photos/seed/${encodeURIComponent(
-    label.toLowerCase().replace(/\s+/g, "-"),
-  )}/600/400`;
+const cardVariant: Variants = {
+  hidden:  { opacity: 0, x: -16 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.5, ease: EASE },
+  },
+};
 
 export default function IndustriesSection() {
   const gridRef = useRef<HTMLDivElement>(null);
@@ -45,13 +49,11 @@ export default function IndustriesSection() {
   return (
     <section
       className="section-pad section-light"
-      style={{
-        borderTop: "1px solid var(--color-light-border)",
-      }}
+      style={{ borderTop: "1px solid var(--color-light-border)" }}
     >
       <Container>
         <AnimatedSection direction="up">
-          <div className="text-center mb-3">
+          <div className="mb-3">
             <h2
               className="font-display font-bold"
               style={{
@@ -66,97 +68,83 @@ export default function IndustriesSection() {
 
         <AnimatedSection delay={0.1}>
           <p
-            className="text-center text-base max-w-xl mx-auto mb-12"
+            className="text-base max-w-xl mb-12"
             style={{ color: "var(--color-light-muted)" }}
           >
-            Tailor-made specific solutions for different industries and
-            application scenarios
+            Tailor-made solutions for demanding industries and
+            critical application scenarios.
           </p>
         </AnimatedSection>
 
         <motion.div
           ref={gridRef}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px"
+          style={{ border: "1px solid var(--color-light-border)" }}
           variants={staggerContainer}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
           {industries.map((industry) => {
             const Icon = industry.icon;
-            const image = getIndustryImage(industry.label);
 
             return (
               <motion.div
                 key={industry.label}
-                variants={fadeUp}
-                className="group relative overflow-hidden rounded-sm cursor-pointer"
+                variants={cardVariant}
+                className="group relative flex items-center gap-5 px-6 py-5 cursor-default overflow-hidden"
                 style={{
-                  aspectRatio: "1 / 1",
-                  border: "1px solid var(--color-light-border)",
                   background: "var(--color-light-surface)",
+                  borderRight: "1px solid var(--color-light-border)",
+                  borderBottom: "1px solid var(--color-light-border)",
+                  transition: "background 250ms ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background =
+                    "var(--color-light-bg)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background =
+                    "var(--color-light-surface)";
                 }}
               >
-                {/* Default background */}
+                {/* Accent left bar — slides in on hover */}
                 <div
-                  className="absolute inset-0 transition-opacity duration-400 group-hover:opacity-0"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, var(--color-light-bg) 0%, var(--color-light-surface) 100%)",
-                  }}
-                />
-
-                {/* Hover image */}
-                <img
-                  src={image}
-                  alt={industry.label}
-                  width={400}
-                  height={400}
-                  loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover opacity-0 scale-[1.04] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:scale-100"
-                />
-
-                {/* Dark overlay on hover */}
-                <div
-                  className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{
-                    background:
-                      "linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.28) 55%, rgba(0,0,0,0.08) 100%)",
-                  }}
-                />
-
-                {/* Accent line */}
-                <div
-                  className="absolute top-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full"
+                  className="absolute left-0 top-0 bottom-0 w-0.5 origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
                   style={{ background: "var(--color-light-accent)" }}
                 />
 
-                {/* Content */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4 z-10">
-                  <div
-                    className="flex items-center justify-center rounded-sm transition-all duration-300 group-hover:scale-95"
-                    style={{
-                      width: 72,
-                      height: 72,
-                      background: "rgba(0,0,0,0.02)",
-                      border: "1px solid rgba(0,0,0,0.05)",
-                    }}
-                  >
-                    <Icon
-                      size={42}
-                      strokeWidth={1.15}
-                      className="transition-colors duration-300 text-[var(--color-light-text)] group-hover:text-white"
-                    />
-                  </div>
+                {/* Icon */}
+                <div
+                  className="flex-shrink-0 flex items-center justify-center rounded-sm transition-colors duration-250"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    background: `oklch(from var(--color-light-accent) l c h / 0.07)`,
+                    border: `1px solid oklch(from var(--color-light-accent) l c h / 0.12)`,
+                    color: "var(--color-light-accent)",
+                  }}
+                >
+                  <Icon size={22} strokeWidth={1.3} />
+                </div>
 
-                  <span
-                    className="font-display font-semibold text-center leading-tight transition-colors duration-300 text-[var(--color-light-text)] group-hover:text-white"
+                {/* Text */}
+                <div className="min-w-0">
+                  <p
+                    className="font-display font-bold leading-none mb-1 transition-colors duration-250 group-hover:text-[var(--color-light-accent)]"
                     style={{
-                      fontSize: "clamp(0.72rem, 1.2vw, 0.86rem)",
-                      letterSpacing: "0.04em",
+                      fontSize: "clamp(0.82rem, 1.1vw, 0.94rem)",
+                      color: "var(--color-light-text)",
+                      letterSpacing: "0.01em",
                     }}
                   >
                     {industry.label}
-                  </span>
+                  </p>
+                  <p
+                    className="text-xs leading-snug"
+                    style={{ color: "var(--color-light-faint)" }}
+                  >
+                    {industry.desc}
+                  </p>
                 </div>
               </motion.div>
             );

@@ -64,6 +64,10 @@ export interface ApiProduct {
   includes: string[];
   images: string[];
   is_popular: number;
+  meta_title?: string | null;
+  meta_description?: string | null;
+  meta_keyword?: string | null;
+  product_brochure_photo?: string | null;
 }
 
 export interface ApiProductDetail {

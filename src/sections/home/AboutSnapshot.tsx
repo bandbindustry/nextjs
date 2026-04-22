@@ -52,7 +52,7 @@ export default function AboutSnapshot() {
                 alt="B & B Industries manufacturing facility"
                 width={800}
                 height={600}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-sm"
                 loading="lazy"
               />
 
@@ -68,7 +68,7 @@ export default function AboutSnapshot() {
               {/* Est. tag */}
 
               {/* ISO badge */}
-              <div
+              {/* <div
                 className="absolute bottom-4 right-4 px-4 py-3 rounded-sm"
                 style={{
                   background: "rgba(0,0,0,0.75)",
@@ -86,11 +86,11 @@ export default function AboutSnapshot() {
                 >
                   ISO Certified
                 </p>
-              </div>
+              </div> */}
             </div>
 
             {/* ── Metrics strip ── */}
-            <div
+            {/* <div
               className="grid grid-cols-3 gap-px mt-4 rounded-sm overflow-hidden"
               style={{
                 background: "var(--color-light-border)",
@@ -128,7 +128,7 @@ export default function AboutSnapshot() {
                   </span>
                 </div>
               ))}
-            </div>
+            </div> */}
           </motion.div>
 
           {/* ── Right: Content ── */}

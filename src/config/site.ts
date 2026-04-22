@@ -3,7 +3,7 @@ const SITE_URL =
 
 export const siteConfig = {
   name: "B and B Industries",
-  tagline: "Precision. Power. Performance.",
+  tagline: "Precision in every cut",
   description:
     "B and B Industries delivers world-class industrial manufacturing solutions, precision parts, and cutting-edge machinery.",
   url: SITE_URL,
@@ -30,6 +30,5 @@ export const navLinks = [
   { label: "Products", href: "/products" },
   { label: "Services", href: "/service" },
   { label: "Articles", href: "/blog" },
-
   { label: "Contact", href: "/contact" },
 ];

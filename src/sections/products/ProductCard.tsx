@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FiArrowRight, FiTag, FiZap } from "react-icons/fi";
+import { FiArrowUpRight, FiTag, FiZap } from "react-icons/fi";
 import { useModal } from "@/context/ModalContext";
 import type { ApiProduct } from "@/types/products";
 
@@ -26,29 +26,19 @@ export default function ProductCard({ product, index }: Props) {
   return (
     <motion.article
       variants={fadeUp}
-      className="group flex flex-col rounded-sm overflow-hidden h-full"
+      className="group relative flex flex-col rounded-sm overflow-hidden h-full"
       style={{
         background: "var(--color-light-bg)",
         border: "1px solid var(--color-light-border)",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-        transition: "box-shadow 0.3s ease, transform 0.3s ease",
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.boxShadow = "0 12px 40px rgba(0,0,0,0.1)";
-        el.style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.boxShadow = "0 1px 4px rgba(0,0,0,0.05)";
-        el.style.transform = "translateY(0)";
       }}
     >
-      {/* ── Image ── */}
+      {/* ── Image block ── */}
       <Link
         href={`/products/${product.id}`}
         className="relative overflow-hidden block shrink-0"
-        style={{ aspectRatio: "16/9" }}
+        // style={{ aspectRatio: "3/4" }}
+         style={{ aspectRatio: "4/3" }} 
+        tabIndex={-1}
       >
         {firstImage ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -56,43 +46,43 @@ export default function ProductCard({ product, index }: Props) {
             src={firstImage}
             alt={product.name}
             loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
           />
         ) : (
           <div
             className="w-full h-full flex items-center justify-center"
             style={{ background: "var(--color-light-surface)" }}
           >
-            <FiTag size={36} style={{ color: "var(--color-light-faint)" }} />
+            <FiTag size={32} style={{ color: "var(--color-light-faint)" }} />
           </div>
         )}
 
-        {/* Gradient */}
+        {/* Scrim — stronger at bottom */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)",
+              "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.2) 45%, rgba(0,0,0,0) 100%)",
           }}
         />
 
-        {/* Index badge */}
-        <div
-          className="absolute top-3 left-3 px-2 py-1 rounded-sm"
-          style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(6px)" }}
+        {/* Large watermark index — visible on hover */}
+        <span
+          className="absolute top-0 right-0 font-display font-black select-none pointer-events-none leading-none opacity-0 translate-y-1 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0"
+          style={{
+            fontSize: "6.5rem",
+            color: "rgba(255,255,255,0.1)",
+            lineHeight: 1,
+            padding: "8px 12px 0 0",
+          }}
         >
-          <span
-            className="font-display font-bold text-white"
-            style={{ fontSize: "10px", letterSpacing: "0.18em" }}
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
-        </div>
+          {String(index + 1).padStart(2, "0")}
+        </span>
 
         {/* Popular badge */}
         {product.is_popular === 1 && (
           <div
-            className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-sm"
+            className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 rounded-sm"
             style={{ background: "var(--color-light-accent)" }}
           >
             <FiZap size={9} color="#fff" />
@@ -105,90 +95,78 @@ export default function ProductCard({ product, index }: Props) {
           </div>
         )}
 
-        {/* Title overlay */}
+        {/* Text overlay at bottom of image */}
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <p
-            className="font-display uppercase mb-0.5"
+            className="font-display uppercase mb-1"
             style={{
               fontSize: "9px",
               letterSpacing: "0.18em",
-              color: "rgba(255,255,255,0.5)",
+              color: "rgba(255,255,255,0.45)",
             }}
           >
             {product.category_name}
           </p>
           <h3
-            className="font-display font-bold text-white leading-tight"
-            style={{ fontSize: "clamp(0.95rem, 1.6vw, 1.15rem)" }}
+            className="font-display font-bold text-white leading-snug"
+            style={{ fontSize: "clamp(0.9rem, 1.4vw, 1.05rem)" }}
           >
             {product.name}
           </h3>
         </div>
       </Link>
 
-      {/* ── Body — description only ── */}
-      <div
-        className="flex flex-col p-4 flex-1"
-        style={{ background: "var(--color-light-surface)" }}
-      >
+      {/* ── Body ── */}
+      <div className="flex flex-col flex-1 p-4 gap-4">
         <p
-          className="text-xs leading-relaxed line-clamp-3"
+          className="text-xs leading-relaxed line-clamp-3 flex-1"
           style={{ color: "var(--color-light-muted)" }}
         >
           {product.description}
         </p>
-      </div>
 
-      {/* ── Footer ── */}
-      <div
-        className="grid grid-cols-2 shrink-0"
-        style={{ borderTop: "1px solid var(--color-light-border)" }}
-      >
-        <Link
-          href={`/products/${product.id}`}
-          className="group/link flex items-center justify-center gap-1.5 px-4 py-3 transition-all duration-200 text-xs font-display font-semibold uppercase tracking-wider"
-          style={{
-            borderRight: "1px solid var(--color-light-border)",
-            color: "var(--color-light-muted)",
-            background: "var(--color-light-bg)",
-          }}
-          onMouseEnter={(e) => {
-            const el = e.currentTarget as HTMLElement;
-            el.style.background = "var(--color-light-surface)";
-            el.style.color = "var(--color-light-text)";
-          }}
-          onMouseLeave={(e) => {
-            const el = e.currentTarget as HTMLElement;
-            el.style.background = "var(--color-light-bg)";
-            el.style.color = "var(--color-light-muted)";
-          }}
-        >
-          Details
-          <FiArrowRight
-            size={11}
-            className="-translate-x-0.5 group-hover/link:translate-x-0 transition-transform duration-200"
-          />
-        </Link>
-        <button
-          onClick={openModal}
-          className="flex items-center justify-center gap-1.5 px-4 py-3 transition-all duration-200 text-xs font-display font-semibold uppercase tracking-wider"
-          style={{
-            color: "var(--color-light-accent)",
-            background: "var(--color-light-bg)",
-          }}
-          onMouseEnter={(e) => {
-            const el = e.currentTarget as HTMLElement;
-            el.style.background = "var(--color-light-accent)";
-            el.style.color = "#fff";
-          }}
-          onMouseLeave={(e) => {
-            const el = e.currentTarget as HTMLElement;
-            el.style.background = "var(--color-light-bg)";
-            el.style.color = "var(--color-light-accent)";
-          }}
-        >
-          Get Quote
-        </button>
+        {/* Action row */}
+        <div className="flex items-center gap-2 mt-auto">
+          {/* Get Quote — primary */}
+          <button
+            onClick={openModal}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-sm font-display font-semibold uppercase transition-opacity duration-150 hover:opacity-85"
+            style={{
+              fontSize: "10px",
+              letterSpacing: "0.14em",
+              background: "var(--color-light-accent)",
+              color: "#fff",
+            }}
+          >
+            Get Quote
+          </button>
+
+          {/* Details — ghost square */}
+          <Link
+            href={`/products/${product.id}`}
+            aria-label={`View details for ${product.name}`}
+            className="flex items-center justify-center rounded-sm transition-colors duration-150"
+            style={{
+              width: 36,
+              height: 36,
+              border: "1px solid var(--color-light-border)",
+              color: "var(--color-light-muted)",
+              flexShrink: 0,
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.borderColor = "var(--color-light-text)";
+              el.style.color = "var(--color-light-text)";
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.borderColor = "var(--color-light-border)";
+              el.style.color = "var(--color-light-muted)";
+            }}
+          >
+            <FiArrowUpRight size={14} />
+          </Link>
+        </div>
       </div>
     </motion.article>
   );

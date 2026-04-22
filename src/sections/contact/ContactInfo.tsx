@@ -33,19 +33,19 @@ export default function ContactInfo() {
       value: email,
       sub: "We reply within 24 hours",
     },
-    {
-      icon: FiClock,
-      label: "Working Hours",
-      value: "Mon – Sat",
-      sub: "9:00 AM – 6:00 PM IST",
-    },
+    // {
+    //   icon: FiClock,
+    //   label: "Working Hours",
+    //   value: "Mon – Sat",
+    //   sub: "9:00 AM – 6:00 PM IST",
+    // },
   ];
 
   return (
     <section className="section-pad" style={{ background: "var(--color-bg)" }}>
       <Container>
         {/* Info cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
           {info.map((item, i) => (
             <AnimatedSection key={item.label} delay={i * 0.1} direction="up">
               <div
@@ -74,13 +74,13 @@ export default function ContactInfo() {
                   {item.label}
                 </p>
                 <p
-                  className="font-semibold text-sm mb-1"
+                  className="font-semibold text-base mb-1"
                   style={{ color: "var(--color-text)" }}
                 >
                   {item.value}
                 </p>
                 <p
-                  className="text-xs"
+                  className="text-base"
                   style={{ color: "var(--color-text-faint)" }}
                 >
                   {item.sub}
@@ -90,10 +90,10 @@ export default function ContactInfo() {
           ))}
         </div>
 
-        <AnimatedLine className="mb-16" />
+        {/* <AnimatedLine className="mb-16" /> */}
 
         {/* Map placeholder */}
-        <AnimatedSection direction="up">
+        <AnimatedSection direction="up" className="hidden">
           <div
             className="w-full rounded-sm overflow-hidden flex items-center justify-center"
             style={{

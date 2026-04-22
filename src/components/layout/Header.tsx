@@ -351,7 +351,7 @@ export default function Header() {
                       <Link
                         href="/products"
                         className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-widest transition-colors hover:opacity-75"
-                        style={{ color: "var(--color-accent)" }}
+                        style={{ color: "var(--color-black)" }}
                       >
                         View All Products <FiArrowRight size={11} />
                       </Link>

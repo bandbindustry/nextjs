@@ -72,22 +72,22 @@ export default function Footer() {
   // Always show social links — API value takes priority, siteConfig as fallback
   const socialLinks = [
     {
-      icon: <FaFacebook size={14} />,
+      icon: <FaFacebook size={18} />,
       href: settings.social_link_facebook || siteConfig.social.facebook,
       label: "LinkedIn",
     },
     {
-      icon: <FaYoutube size={14} />,
+      icon: <FaYoutube size={18} />,
       href: settings.social_link_youtube || siteConfig.social.youtube,
       label: "YouTube",
     },
     {
-      icon: <FaInstagram size={14} />,
+      icon: <FaInstagram size={18} />,
       href: settings.social_link_instagram || siteConfig.social.instagram,
       label: "Instagram",
     },
     {
-      icon: <FaWhatsapp size={14} />,
+      icon: <FaWhatsapp size={18} />,
       href: `https://wa.me/${settings.whatsapp_phone_number || siteConfig.contact.whatsapp}`,
       label: "WhatsApp",
     },
@@ -144,7 +144,7 @@ export default function Footer() {
           variants={stagger}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8"
         >
           {/* ── Col 1: Brand ── */}
           <motion.div variants={fadeUp} className="flex flex-col gap-5">
@@ -200,7 +200,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-8 h-8 rounded-sm flex items-center justify-center transition-all duration-200"
+                  className="w-10 h-10 rounded-sm flex items-center justify-center transition-all duration-200"
                   style={{
                     background: "var(--color-surface)",
                     border: "1px solid var(--color-border)",
@@ -223,35 +223,9 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* ── Col 2: Quick Links ── */}
-          <motion.div variants={fadeUp}>
-            <ColHeading>Quick Links</ColHeading>
-            <ul className="space-y-3">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="flex items-center gap-2 text-base transition-colors duration-150"
-                    style={{ color: "var(--color-text-muted)" }}
-                    onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.color =
-                        "var(--color-accent)")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.color =
-                        "var(--color-text-muted)")
-                    }
-                  >
-                    <span
-                      className="w-1 h-1 rounded-full shrink-0"
-                      style={{ background: "var(--color-text-faint)" }}
-                    />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+  
+
+   
 
           {/* ── Col 3: Products (from API) ── */}
           <motion.div variants={fadeUp}>
@@ -304,6 +278,71 @@ export default function Footer() {
                   </Link>
                 </li>
               )}
+            </ul>
+          </motion.div>
+
+                  {/* ── Col 2: Quick Links ── */}
+          <motion.div variants={fadeUp}>
+            <ColHeading>Quick Links</ColHeading>
+            <ul className="space-y-3">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="flex items-center gap-2 text-base transition-colors duration-150"
+                    style={{ color: "var(--color-text-muted)" }}
+                    onMouseEnter={(e) =>
+                      ((e.currentTarget as HTMLElement).style.color =
+                        "var(--color-accent)")
+                    }
+                    onMouseLeave={(e) =>
+                      ((e.currentTarget as HTMLElement).style.color =
+                        "var(--color-text-muted)")
+                    }
+                  >
+                    <span
+                      className="w-1 h-1 rounded-full shrink-0"
+                      style={{ background: "var(--color-text-faint)" }}
+                    />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+                 {/* ── Col 3: Legal ── */}
+          <motion.div variants={fadeUp}>
+            <ColHeading>Legal</ColHeading>
+            <ul className="space-y-3">
+              {[
+                { label: "Sitemap", href: "/sitemap" },
+                { label: "FAQ", href: "/faq" },
+                { label: "Privacy Policy", href: "/privacy" },
+                { label: "Terms of Use", href: "/terms" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="flex items-center gap-2 text-base transition-colors duration-150"
+                    style={{ color: "var(--color-text-muted)" }}
+                    onMouseEnter={(e) =>
+                      ((e.currentTarget as HTMLElement).style.color =
+                        "var(--color-accent)")
+                    }
+                    onMouseLeave={(e) =>
+                      ((e.currentTarget as HTMLElement).style.color =
+                        "var(--color-text-muted)")
+                    }
+                  >
+                    <span
+                      className="w-1 h-1 rounded-full shrink-0"
+                      style={{ background: "var(--color-text-faint)" }}
+                    />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </motion.div>
 
@@ -420,7 +459,7 @@ export default function Footer() {
             </p>
 
             <div className="flex items-center gap-4 flex-wrap justify-center">
-              {[
+              {/* {[
                 { label: "Faq", href: "/faq" },
                 { label: "Privacy Policy", href: "/privacy" },
                 { label: "Terms of Use", href: "/terms" },
@@ -443,7 +482,7 @@ export default function Footer() {
                 >
                   {label}
                 </Link>
-              ))}
+              ))} */}
 
               <p
                 className="text-xs"

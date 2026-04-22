@@ -6,6 +6,8 @@ import type { Variants } from "framer-motion";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { FiPhone, FiMail, FiArrowRight } from "react-icons/fi";
+import { useSettings } from "@/hooks/useSettings";
+import { siteConfig } from "@/config/site";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -20,6 +22,9 @@ const fadeUp: Variants = {
 };
 
 export default function ServiceCTA() {
+  const settings = useSettings();
+  const phone = settings.contact_phone_number || siteConfig.contact.phone;
+  const email = settings.contact_email || siteConfig.contact.email;
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px 0px" });
 
@@ -115,16 +120,16 @@ export default function ServiceCTA() {
               {
                 icon: <FiPhone size={18} />,
                 label: "Call Us",
-                value: "+91 98765 43210",
+                value: phone,
                 sub: "Available 24 hours, 7 days a week",
-                href: "tel:+919876543210",
+                href: `tel:${phone}`,
               },
               {
                 icon: <FiMail size={18} />,
                 label: "Email Support",
-                value: "service@bbindustries.in",
+                value: email,
                 sub: "Response within 30 minutes",
-                href: "mailto:service@bbindustries.in",
+                href: `mailto:${email}`,
               },
             ].map((contact) => (
               <motion.a

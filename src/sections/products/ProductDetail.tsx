@@ -25,6 +25,7 @@ import {
   FiChevronRight,
   FiMaximize2,
   FiExternalLink,
+  FiFileText,
 } from "react-icons/fi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Thumbs, FreeMode } from "swiper/modules";
@@ -621,6 +622,31 @@ export default function ProductDetail({ id }: { id: string }) {
                     >
                       Get a Quote <FiArrowRight size={13} />
                     </button>
+                    {product.product_brochure_photo && (
+                      <a
+                        href={product.product_brochure_photo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-sm text-sm font-display font-semibold uppercase tracking-wider transition-all duration-200"
+                        style={{
+                          border: "1px solid var(--color-light-accent)",
+                          color: "var(--color-light-accent)",
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLElement).style.background =
+                            "var(--color-light-accent)";
+                          (e.currentTarget as HTMLElement).style.color = "#fff";
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLElement).style.background =
+                            "transparent";
+                          (e.currentTarget as HTMLElement).style.color =
+                            "var(--color-light-accent)";
+                        }}
+                      >
+                        <FiFileText size={13} /> View Brochure
+                      </a>
+                    )}
                     <Link
                       href="/products"
                       className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-sm text-sm font-display font-semibold uppercase tracking-wider transition-all duration-200"

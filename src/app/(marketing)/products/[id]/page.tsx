@@ -20,15 +20,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const firstImage = product.images?.[0];
+  const metaTitle = product.meta_title?.trim() || `${product.name} | B & B Industries`;
+  const metaDescription =
+    product.meta_description?.trim() ||
+    product.description?.slice(0, 160) ||
+    `${product.name} — B & B Industries`;
+  const metaKeywords = product.meta_keyword?.trim() || undefined;
 
   return {
-    title: `${product.name} | B & B Industries`,
-    description:
-      product.description?.slice(0, 160) ??
-      `${product.name} — B & B Industries`,
+    title: metaTitle,
+    description: metaDescription,
+    keywords: metaKeywords,
     openGraph: {
-      title: `${product.name} | B & B Industries`,
-      description: product.description?.slice(0, 160) ?? "",
+      title: metaTitle,
+      description: metaDescription,
       images: firstImage ? [{ url: firstImage, alt: product.name }] : [],
     },
   };
