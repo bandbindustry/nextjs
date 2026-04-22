@@ -41,7 +41,8 @@ export default function GoogleAnalytics() {
     getServerSnapshot,
   );
 
-  if (!GA_ID || !enabled) return null;
+  if (!GA_ID) return null;
+  console.log("GA_ID: ", GA_ID);
 
   return <NextGoogleAnalytics gaId={GA_ID} />;
 }
