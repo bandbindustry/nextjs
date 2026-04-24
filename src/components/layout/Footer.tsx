@@ -208,24 +208,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-10 h-10 rounded-sm flex items-center justify-center transition-all duration-200"
-                  style={{
-                    background: "#ffffff",
-                    border: "1px solid #e5e5e5",
-                    color: "#111111",
-                  }}
-                  onMouseEnter={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--color-accent)";
-                    el.style.color = "var(--color-accent)";
-                    el.style.background = "#ffffff";
-                  }}
-                  onMouseLeave={(e) => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "#e5e5e5";
-                    el.style.color = "#111111";
-                    el.style.background = "#ffffff";
-                  }}
+                  className="w-10 h-10 rounded-sm flex items-center justify-center transition-all duration-200 bg-white border border-neutral-200 text-neutral-900 hover:bg-gray-500 hover:border-gray-500 hover:text-white"
                 >
                   {s.icon}
                 </Link>
