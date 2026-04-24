@@ -1,5 +1,5 @@
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandbindustries.com";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandbindustry.com/";
 
 export const siteConfig = {
   name: "B and B Industries",
