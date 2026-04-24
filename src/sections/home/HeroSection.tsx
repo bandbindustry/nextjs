@@ -179,27 +179,24 @@ export default function HeroSection() {
             animate="visible"
             transition={{ delay: 0.85 }}
           >
-            {[
-              "ISO Certified",
-              "25+ Years",
-              "200+ Clients",
-              "Pan-India Delivery",
-            ].map((badge, i) => (
-              <div key={badge} className="flex items-center gap-4">
-                <span
-                  className="text-xs font-display uppercase tracking-widest"
-                  style={{ color: "rgba(255,255,255,0.4)" }}
-                >
-                  {badge}
-                </span>
-                {i < 3 && (
+            {["ISO Certified", "200+ Clients", "Pan-India Delivery"].map(
+              (badge, i) => (
+                <div key={badge} className="flex items-center gap-4">
                   <span
-                    className="w-px h-3 shrink-0"
-                    style={{ background: "rgba(255,255,255,0.15)" }}
-                  />
-                )}
-              </div>
-            ))}
+                    className="text-xs font-display uppercase tracking-widest"
+                    style={{ color: "rgba(255,255,255,0.4)" }}
+                  >
+                    {badge}
+                  </span>
+                  {i < 3 && (
+                    <span
+                      className="w-px h-3 shrink-0"
+                      style={{ background: "rgba(255,255,255,0.15)" }}
+                    />
+                  )}
+                </div>
+              ),
+            )}
           </motion.div>
         </Container>
       </motion.div>

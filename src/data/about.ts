@@ -86,7 +86,7 @@ export const team = [
     name: "B. K. Patel",
     role: "Founder & Managing Director",
     image: "https://picsum.photos/seed/ceo-bnb/400/400",
-    bio: "25+ years in precision manufacturing. Visionary behind B & B's growth from a single machine to a full-scale facility.",
+    bio: "Precision manufacturing. Visionary behind B & B's growth from a single machine to a full-scale facility.",
   },
   {
     name: "R. B. Patel",

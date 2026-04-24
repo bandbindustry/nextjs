@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = createMetadata({
   title: "About Us",
   description:
-    "25+ years of precision manufacturing excellence. Discover the story, team, values, and ISO certifications behind B and B Industries — Gujarat's trusted industrial manufacturer.",
+    "precision manufacturing excellence. Discover the story, team, values, and ISO certifications behind B and B Industries — Gujarat's trusted industrial manufacturer.",
   keywords: [
     "about B and B Industries",
     "manufacturing company Gujarat",

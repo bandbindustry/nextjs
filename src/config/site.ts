@@ -19,6 +19,8 @@ export const siteConfig = {
     facebook: "https://www.facebook.com/share/1CLzugLECJ/",
     youtube: "https://www.youtube.com/@bbindustries-1",
     instagram: "https://www.instagram.com/bandb_industry",
+    linkedin:
+      "https://www.linkedin.com/in/bandb-industries-65b2a93ba?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
 
     // whatsapp is built from contact.whatsapp — no separate field needed
   },

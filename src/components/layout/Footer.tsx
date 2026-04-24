@@ -70,11 +70,12 @@ export default function Footer() {
   });
 
   // Always show social links — API value takes priority, siteConfig as fallback
+  // LinkedIn is only shown when the API provides a value (no siteConfig fallback)
   const socialLinks = [
     {
       icon: <FaFacebook size={18} />,
       href: settings.social_link_facebook || siteConfig.social.facebook,
-      label: "LinkedIn",
+      label: "Facebook",
     },
     {
       icon: <FaYoutube size={18} />,
@@ -90,6 +91,13 @@ export default function Footer() {
       icon: <FaWhatsapp size={18} />,
       href: `https://wa.me/${settings.whatsapp_phone_number || siteConfig.contact.whatsapp}`,
       label: "WhatsApp",
+    },
+
+    {
+      icon: <FaLinkedinIn size={18} />,
+      // href: settings.social_link_linkedin,
+      href: settings.social_link_linkedin || siteConfig.social.linkedin,
+      label: "LinkedIn",
     },
   ];
 
@@ -223,10 +231,6 @@ export default function Footer() {
             </div>
           </motion.div>
 
-  
-
-   
-
           {/* ── Col 3: Products (from API) ── */}
           <motion.div variants={fadeUp}>
             <ColHeading>Products</ColHeading>
@@ -281,7 +285,7 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-                  {/* ── Col 2: Quick Links ── */}
+          {/* ── Col 2: Quick Links ── */}
           <motion.div variants={fadeUp}>
             <ColHeading>Quick Links</ColHeading>
             <ul className="space-y-3">
@@ -311,7 +315,7 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-                 {/* ── Col 3: Legal ── */}
+          {/* ── Col 3: Legal ── */}
           <motion.div variants={fadeUp}>
             <ColHeading>Legal</ColHeading>
             <ul className="space-y-3">
