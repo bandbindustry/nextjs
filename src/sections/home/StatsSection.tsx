@@ -18,25 +18,25 @@ import geoData from "../../../public/countries-110m.json";
 
 const presenceDots = [
   { id: "india", label: "India", coordinates: createCoordinates(78.96, 20.59) },
-  { id: "uae", label: "UAE", coordinates: createCoordinates(53.84, 23.42) },
-  {
-    id: "germany",
-    label: "Germany",
-    coordinates: createCoordinates(10.45, 51.16),
-  },
-  { id: "usa", label: "USA", coordinates: createCoordinates(-95.71, 37.09) },
-  {
-    id: "australia",
-    label: "Australia",
-    coordinates: createCoordinates(133.77, -25.27),
-  },
-  {
-    id: "brazil",
-    label: "Brazil",
-    coordinates: createCoordinates(-51.92, -14.23),
-  },
-  { id: "japan", label: "Japan", coordinates: createCoordinates(138.25, 36.2) },
-  { id: "uk", label: "UK", coordinates: createCoordinates(-3.43, 55.37) },
+  // { id: "uae", label: "UAE", coordinates: createCoordinates(53.84, 23.42) },
+  // {
+  //   id: "germany",
+  //   label: "Germany",
+  //   coordinates: createCoordinates(10.45, 51.16),
+  // },
+  // { id: "usa", label: "USA", coordinates: createCoordinates(-95.71, 37.09) },
+  // {
+  //   id: "australia",
+  //   label: "Australia",
+  //   coordinates: createCoordinates(133.77, -25.27),
+  // },
+  // {
+  //   id: "brazil",
+  //   label: "Brazil",
+  //   coordinates: createCoordinates(-51.92, -14.23),
+  // },
+  // { id: "japan", label: "Japan", coordinates: createCoordinates(138.25, 36.2) },
+  // { id: "uk", label: "UK", coordinates: createCoordinates(-3.43, 55.37) },
 ];
 
 const stats = [
