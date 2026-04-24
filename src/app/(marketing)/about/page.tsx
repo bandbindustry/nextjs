@@ -8,6 +8,7 @@ import {
   AboutValues,
   AboutCertifications,
   AboutTeam,
+  AboutAfterSales,
   AboutCTA,
 } from "@/sections/about";
 
@@ -36,6 +37,7 @@ export default function AboutPage() {
       <AboutValues />
       {/* <AboutCertifications /> */}
       {/* <AboutTeam /> */}
+      <AboutAfterSales />
       <AboutCTA />
     </main>
   );

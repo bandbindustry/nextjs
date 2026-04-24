@@ -58,7 +58,7 @@ export default function ServiceHero() {
         style={{ y: imageY }}
       >
         <img
-          src="https://picsum.photos/seed/bnb-service-hero/1600/900"
+          src="/images/about/handShake.jpg"
           alt=""
           aria-hidden="true"
           width={1600}

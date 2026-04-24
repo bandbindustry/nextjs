@@ -21,6 +21,8 @@ export interface SiteSettings {
   social_link_instagram: string;
   social_link_youtube: string;
   social_link_linkedin: string;
+  contact_service_email: string;
+  contact_service_number: string;
   [key: string]: string; // allow any extra keys
 }
 
@@ -34,6 +36,8 @@ export const SETTINGS_FALLBACK: SiteSettings = {
   social_link_instagram: "",
   social_link_youtube: "",
   social_link_linkedin: "",
+  contact_service_email: "",
+  contact_service_number: "",
 };
 
 // ─── Decrypt helper ───────────────────────────────────────────────────────────

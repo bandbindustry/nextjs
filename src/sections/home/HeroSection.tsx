@@ -2,12 +2,12 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { staggerContainer, clipUp, fadeIn } from "@/lib/motion";
 
-const BG_IMAGE =
-  "https://pplx-res.cloudinary.com/image/upload/pplx_search_images/c3cda48da1c4b6725bc4ac20f769bdc3dd1e7e25.jpg";
+const BG_IMAGE = "/images/homeHero/Making_the_case_for_tube_laser.jpeg";
 
 export default function HeroSection() {
   const words = ["Engineering", "Excellence", "at", "Every", "Scale"];
@@ -33,11 +33,13 @@ export default function HeroSection() {
         className="absolute inset-0 w-full h-full"
         style={{ y: bgY, scale: 1.1 }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={BG_IMAGE}
           alt="CNC laser cutting metal sheet"
-          className="w-full h-full object-cover object-center"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
         />
       </motion.div>
 
@@ -46,7 +48,7 @@ export default function HeroSection() {
       {/* Base dark */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: "rgba(0,0,0,0.55)" }}
+        style={{ background: "rgba(0,0,0,0.35)" }}
       />
 
       {/* Bottom-up — text legibility */}

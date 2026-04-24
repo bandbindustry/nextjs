@@ -20,13 +20,13 @@ const technologies = [
       "High-speed chuck system for rapid tube loading and unloading, maximising throughput on every production run.",
     image: "/images/FastChucks.webp",
   },
-  {
-    id: 2,
-    label: "Intelligent Gas Pressure Control",
-    description:
-      "Automated assist-gas regulation that adapts in real time to material thickness for clean, burr-free cuts.",
-    image: "/images/IntelligentGasPressureControlling.webp",
-  },
+  // {
+  //   id: 2,
+  //   label: "Intelligent Gas Pressure Control",
+  //   description:
+  //     "Automated assist-gas regulation that adapts in real time to material thickness for clean, burr-free cuts.",
+  //   image: "/images/IntelligentGasPressureControlling.webp",
+  // },
   {
     id: 3,
     label: "One-Second Edge Finding",

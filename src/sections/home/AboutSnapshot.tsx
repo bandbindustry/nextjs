@@ -48,7 +48,7 @@ export default function AboutSnapshot() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://picsum.photos/seed/factory/800/600"
+                src="/images/about/b-and-b-company.png"
                 alt="B & B Industries manufacturing facility"
                 width={800}
                 height={600}
@@ -208,7 +208,7 @@ export default function AboutSnapshot() {
 
             {/* Highlights list */}
             <motion.ul
-              className="space-y-3 mb-10"
+              className="space-y-3 mb-10 hidden"
               variants={staggerContainer}
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}

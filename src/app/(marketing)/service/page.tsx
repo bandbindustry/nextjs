@@ -34,7 +34,7 @@ export default function ServicePage() {
       {/* <ServiceStats /> */}
       {/* <ServiceSkills /> */}
       <ServiceOnlineService />
-      <ServiceTopServices />
+      {/* <ServiceTopServices /> */}
       <ServiceFeatures />
       <ServiceProcess />
       <ServiceCTA />

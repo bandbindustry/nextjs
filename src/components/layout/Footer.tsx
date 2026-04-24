@@ -210,19 +210,21 @@ export default function Footer() {
                   aria-label={s.label}
                   className="w-10 h-10 rounded-sm flex items-center justify-center transition-all duration-200"
                   style={{
-                    background: "var(--color-surface)",
-                    border: "1px solid var(--color-border)",
-                    color: "var(--color-text-faint)",
+                    background: "#ffffff",
+                    border: "1px solid #e5e5e5",
+                    color: "#111111",
                   }}
                   onMouseEnter={(e) => {
                     const el = e.currentTarget as HTMLElement;
                     el.style.borderColor = "var(--color-accent)";
                     el.style.color = "var(--color-accent)";
+                    el.style.background = "#ffffff";
                   }}
                   onMouseLeave={(e) => {
                     const el = e.currentTarget as HTMLElement;
-                    el.style.borderColor = "var(--color-border)";
-                    el.style.color = "var(--color-text-faint)";
+                    el.style.borderColor = "#e5e5e5";
+                    el.style.color = "#111111";
+                    el.style.background = "#ffffff";
                   }}
                 >
                   {s.icon}

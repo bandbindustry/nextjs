@@ -6,6 +6,7 @@ import type { Variants } from "framer-motion";
 import Container from "@/components/ui/Container";
 import { FiMonitor, FiFileText, FiMail, FiPhoneCall } from "react-icons/fi";
 import { FiArrowRight } from "react-icons/fi";
+import { useSettings } from "@/hooks/useSettings";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -19,38 +20,47 @@ const fadeUp: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
 };
 
-const onlineServices = [
-  {
-    icon: FiMonitor,
-    title: "Remote Diagnostics Portal",
-    subtitle: "Machine Health Dashboard",
-    href: "#",
-  },
-  {
-    icon: FiFileText,
-    title: "B & B Service Hub",
-    subtitle: "Integrated Machine IoT Platform",
-    href: "#",
-  },
-  {
-    icon: FiMail,
-    title: "service@bnbindustries.in",
-    subtitle: "Answers for Your Needs",
-    href: "mailto:service@bnbindustries.in",
-  },
-  {
-    icon: FiPhoneCall,
-    title: "Instant Messaging",
-    subtitle: "+91 98765 43210",
-    href: "tel:+919876543210",
-  },
-];
-
 export default function ServiceOnlineService() {
+  const settings = useSettings();
   const headRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const headInView = useInView(headRef, { once: true, margin: "-60px 0px" });
   const gridInView = useInView(gridRef, { once: true, margin: "-80px 0px" });
+
+  const serviceEmail =
+    settings.contact_service_email || "service@bnbindustries.in";
+  const serviceNumber = settings.contact_service_number || "+91 98765 43210";
+
+  const onlineServices = [
+    {
+      icon: FiMonitor,
+      title: "Remote Diagnostics Portal",
+      subtitle: "Machine Health Dashboard",
+      href: undefined as string | undefined,
+      cta: undefined as string | undefined,
+    },
+    {
+      icon: FiFileText,
+      title: "B & B Service Hub",
+      subtitle: "Integrated Machine IoT Platform",
+      href: undefined as string | undefined,
+      cta: undefined as string | undefined,
+    },
+    {
+      icon: FiMail,
+      title: serviceEmail,
+      subtitle: "Answers for Your Needs",
+      href: `mailto:${serviceEmail}`,
+      cta: "Email Us",
+    },
+    {
+      icon: FiPhoneCall,
+      title: "Instant Messaging",
+      subtitle: serviceNumber,
+      href: `tel:${serviceNumber.replace(/\s+/g, "")}`,
+      cta: "Call Us",
+    },
+  ];
 
   return (
     <section
@@ -152,13 +162,15 @@ export default function ServiceOnlineService() {
                   >
                     {svc.subtitle}
                   </p>
-                  <span
-                    className="inline-flex items-center gap-1 text-xs font-display uppercase tracking-widest"
-                    style={{ color: "var(--color-light-accent)" }}
-                  >
-                    Learn More
-                    <FiArrowRight size={12} />
-                  </span>
+                  {svc.cta && (
+                    <span
+                      className="inline-flex items-center gap-1 text-xs font-display uppercase tracking-widest"
+                      style={{ color: "var(--color-light-accent)" }}
+                    >
+                      {svc.cta}
+                      <FiArrowRight size={12} />
+                    </span>
+                  )}
                 </div>
               </motion.a>
             );

@@ -58,7 +58,7 @@ export default function AboutHero() {
         style={{ y: imageY }}
       >
         <img
-          src="https://picsum.photos/seed/bnb-about-hero/1600/900"
+          src="/images/about/b-and-b-company.png"
           alt="alt"
           aria-hidden="true"
           width={1600}

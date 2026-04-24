@@ -6,4 +6,5 @@ export { default as AboutTimeline } from "./AboutTimeline";
 export { default as AboutValues } from "./AboutValues";
 export { default as AboutCertifications } from "./AboutCertifications";
 export { default as AboutTeam } from "./AboutTeam";
+export { default as AboutAfterSales } from "./AboutAfterSales";
 export { default as AboutCTA } from "./AboutCTA";
