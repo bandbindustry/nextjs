@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/opengraph-image",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "B and B Industries — Precision Manufacturing",
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     title: "B and B Industries",
     description:
       "Precision manufacturing and industrial solutions from Gujarat, India.",
-    images: ["/opengraph-image"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,

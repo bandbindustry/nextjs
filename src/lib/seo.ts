@@ -56,7 +56,7 @@ export function createMetadata({
   noIndex = false,
 }: PageSeoProps): Metadata {
   const canonicalUrl = `${siteConfig.url}${path}`;
-  const image = ogImage ?? `${siteConfig.url}/opengraph-image`;
+  const image = ogImage ?? `${siteConfig.url}/og-image.png`;
 
   return {
     title,
