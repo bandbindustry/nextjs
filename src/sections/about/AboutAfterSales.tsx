@@ -4,7 +4,7 @@ import Container from "@/components/ui/Container";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import { FiTarget, FiGlobe, FiHeart } from "react-icons/fi";
 
-const HERO_IMAGE = "/images/about/handShake.jpg";
+const HERO_IMAGE = "/images/about/handShake.png";
 
 const badges = [
   { icon: <FiTarget size={18} />, label: "Customer-First Approach" },

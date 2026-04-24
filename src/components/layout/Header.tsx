@@ -16,12 +16,13 @@ import {
   RiArrowRightSLine,
   RiArrowDownSLine,
 } from "react-icons/ri";
-import { FiArrowRight, FiTag } from "react-icons/fi";
+import { FiArrowRight, FiTag, FiMail } from "react-icons/fi";
 import Button from "../ui/Button";
 import { getProductCategories, getProducts } from "@/services/product.service";
 import type { ApiProductCategory } from "@/types/products";
 import { useModal } from "@/context/ModalContext";
 import { encryptUrlParam } from "@/utils/encryption";
+import { useSettings } from "@/hooks/useSettings";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -37,6 +38,8 @@ export default function Header() {
   const router = useRouter();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { openModal } = useModal();
+  const settings = useSettings();
+  const salesEmail = settings.contact_sales_email;
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -109,7 +112,7 @@ export default function Header() {
     <>
       <motion.header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          "fixed left-0 right-0 z-50 transition-all duration-300",
           scrolled ? "border-b py-3" : "py-5",
           !scrolled && lightHeader ? "border-b" : "",
         )}
@@ -207,8 +210,26 @@ export default function Header() {
 
           {/* ── CTA ── */}
           <div className="hidden md:flex items-center gap-3">
-            {/* No href — opens modal only */}
-            <Button variant="primary" onClick={() => {}}>
+            {/* Sales email link */}
+            {salesEmail && (
+              <a
+                href={`mailto:${salesEmail}`}
+                className="flex items-center gap-1.5 font-display uppercase tracking-widest transition-opacity hover:opacity-70"
+                style={{
+                  fontSize: "11px",
+                  letterSpacing: "0.12em",
+                  color: lightHeader
+                    ? "var(--color-text-muted)"
+                    : "var(--color-text-muted)",
+                }}
+              >
+                <FiMail size={12} />
+                {salesEmail}
+              </a>
+            )}
+
+            {/* Opens quote modal */}
+            <Button variant="primary" onClick={openModal}>
               Get a Quote <FiArrowRight size={12} />
             </Button>
           </div>
@@ -594,7 +615,10 @@ export default function Header() {
                 <Button
                   variant="primary"
                   className="w-full justify-center py-4"
-                  onClick={() => setMobileOpen(false)}
+                  onClick={() => {
+                    setMobileOpen(false);
+                    openModal();
+                  }}
                 >
                   Get a Quote <FiArrowRight size={13} />
                 </Button>

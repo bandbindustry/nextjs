@@ -58,7 +58,7 @@ export default function ServiceHero() {
         style={{ y: imageY }}
       >
         <img
-          src="/images/about/handShake.jpg"
+          src="/images/about/handShake.png"
           alt=""
           aria-hidden="true"
           width={1600}

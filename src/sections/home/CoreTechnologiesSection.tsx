@@ -32,14 +32,14 @@ const technologies = [
     label: "One-Second Edge Finding",
     description:
       "Laser-based edge detection that locates workpiece boundaries in under a second, eliminating manual setup.",
-    image: "/images/One-SecondEdgeFinding.webp",
+    image: "/images/One-SecondEdgeFinding.jpeg",
   },
   {
     id: 4,
     label: "Over-Edge Protection",
     description:
       "Intelligent collision-avoidance that safeguards the cutting head when traversing complex profiles and edges.",
-    image: "/images/OverEdgeProtection.webp",
+    image: "/images/OverEdgeProtection.jpeg",
   },
   {
     id: 5,

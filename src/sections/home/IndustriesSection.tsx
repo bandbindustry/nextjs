@@ -7,34 +7,52 @@ import Container from "@/components/ui/Container";
 import AnimatedSection from "@/components/ui/AnimatedSection";
 import { staggerContainer } from "@/lib/motion";
 import {
+  TbTool,
+  TbSettings,
+  TbRuler2,
   TbDroplet,
+  TbChefHat,
   TbCar,
-  TbPlane,
-  TbBuildingFactory2,
-  TbBolt,
-  TbShip,
-  TbTractor,
-  TbShield,
-  TbDiamond,
 } from "react-icons/tb";
 import type { IconType } from "react-icons";
 
-const EASE = [0.16, 1, 0.3, 1] as const; // ← fixes the TS error
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 const industries: { label: string; icon: IconType; desc: string }[] = [
-  { label: "Oil & Gas",     icon: TbDroplet,          desc: "Valves, fittings & pipeline components" },
-  { label: "Automotive",   icon: TbCar,               desc: "Precision fasteners & engine parts" },
-  { label: "Jewelry",      icon: TbDiamond,           desc: "Fine metal castings & settings" },
-  { label: "Aerospace",    icon: TbPlane,             desc: "High-tolerance structural parts" },
-  { label: "Electronics",  icon: TbBolt,              desc: "Micro-components & shielding" },
-  { label: "Construction", icon: TbBuildingFactory2,  desc: "Structural bolts & anchor systems" },
-  { label: "Marine",       icon: TbShip,              desc: "Corrosion-resistant alloy parts" },
-  { label: "Agriculture",  icon: TbTractor,           desc: "Heavy-duty machinery components" },
-  { label: "Defense",      icon: TbShield,            desc: "MIL-spec certified hardware" },
+  {
+    label: "Hardware",
+    icon: TbTool,
+    desc: "Bolts, nuts, fasteners & industrial fittings",
+  },
+  {
+    label: "Fabrication",
+    icon: TbSettings,
+    desc: "Sheet metal, structural & custom fabrication",
+  },
+  {
+    label: "Precision",
+    icon: TbRuler2,
+    desc: "High-tolerance CNC & machined components",
+  },
+  {
+    label: "Submersible",
+    icon: TbDroplet,
+    desc: "Pump bodies, impellers & water-resistant parts",
+  },
+  {
+    label: "Kitchen Ware",
+    icon: TbChefHat,
+    desc: "Stainless steel cookware & kitchen fittings",
+  },
+  {
+    label: "Auto Parts",
+    icon: TbCar,
+    desc: "Engine components, brackets & chassis parts",
+  },
 ];
 
 const cardVariant: Variants = {
-  hidden:  { opacity: 0, x: -16 },
+  hidden: { opacity: 0, x: -16 },
   visible: {
     opacity: 1,
     x: 0,
@@ -71,8 +89,8 @@ export default function IndustriesSection() {
             className="text-base max-w-xl mb-12"
             style={{ color: "var(--color-light-muted)" }}
           >
-            Tailor-made solutions for demanding industries and
-            critical application scenarios.
+            Tailor-made solutions for demanding industries and critical
+            application scenarios.
           </p>
         </AnimatedSection>
 

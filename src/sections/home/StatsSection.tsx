@@ -40,9 +40,9 @@ const presenceDots = [
 ];
 
 const stats = [
-  { value: "20+", label: "Years Experience" },
-  { value: "500+", label: "Projects Delivered" },
-  { value: "50+", label: "Industry Partners" },
+  { value: "4+", label: "Years Experience" },
+  { value: "60+", label: "Projects Delivered" },
+  { value: "60+", label: "Industry Partners" },
   { value: "99%", label: "Client Satisfaction" },
 ];
 
@@ -178,8 +178,8 @@ export default function StatsSection() {
               }}
             >
               Trusted in{" "}
-              <span style={{ color: "var(--color-accent)" }}>8+ Countries</span>{" "}
-              Worldwide
+              <span style={{ color: "var(--color-accent)" }}> India</span>{" "}
+              {/* Worldwide */}
             </h2>
           </motion.div>
 

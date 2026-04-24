@@ -23,6 +23,7 @@ export interface SiteSettings {
   social_link_linkedin: string;
   contact_service_email: string;
   contact_service_number: string;
+  contact_sales_email: string;
   [key: string]: string; // allow any extra keys
 }
 
@@ -38,6 +39,7 @@ export const SETTINGS_FALLBACK: SiteSettings = {
   social_link_linkedin: "",
   contact_service_email: "",
   contact_service_number: "",
+  contact_sales_email: "",
 };
 
 // ─── Decrypt helper ───────────────────────────────────────────────────────────
