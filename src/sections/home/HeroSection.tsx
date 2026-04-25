@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Container from "@/components/ui/Container";
@@ -8,6 +8,68 @@ import Button from "@/components/ui/Button";
 import { staggerContainer, clipUp, fadeIn } from "@/lib/motion";
 
 const BG_IMAGE = "/images/homeHero/Making_the_case_for_tube_laser.jpeg";
+
+// ─── Typing phrases ───────────────────────────────────────────────────────────
+const TYPING_PHRASES = [
+  "We are manufacturer in Rajkot",
+  "Precision laser cutting solutions",
+];
+
+// ─── TypingText component ─────────────────────────────────────────────────────
+function TypingText() {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayed, setDisplayed] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const current = TYPING_PHRASES[phraseIndex];
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (!isDeleting && displayed.length < current.length) {
+      // Typing
+      timeout = setTimeout(
+        () => setDisplayed(current.slice(0, displayed.length + 1)),
+        55,
+      );
+    } else if (!isDeleting && displayed.length === current.length) {
+      // Pause at full word
+      timeout = setTimeout(() => setIsDeleting(true), 1800);
+    } else if (isDeleting && displayed.length > 0) {
+      // Deleting
+      timeout = setTimeout(
+        () => setDisplayed(current.slice(0, displayed.length - 1)),
+        30,
+      );
+    } else {
+      // Move to next phrase — defer to avoid synchronous setState in effect
+      timeout = setTimeout(() => {
+        setIsDeleting(false);
+        setPhraseIndex((i) => (i + 1) % TYPING_PHRASES.length);
+      }, 0);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayed, isDeleting, phraseIndex]);
+
+  return (
+    <span className="inline-flex items-center gap-0.5">
+      <span style={{ color: "rgba(255,255,255,0.85)" }}>{displayed}</span>
+      {/* Blinking cursor */}
+      <motion.span
+        style={{
+          display: "inline-block",
+          width: "2px",
+          height: "1em",
+          background: "var(--color-accent)",
+          borderRadius: "1px",
+          verticalAlign: "middle",
+        }}
+        animate={{ opacity: [1, 0, 1] }}
+        transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
+      />
+    </span>
+  );
+}
 
 export default function HeroSection() {
   const words = ["Engineering", "Excellence", "at", "Every", "Scale"];
@@ -92,8 +154,8 @@ export default function HeroSection() {
       >
         <Container className="pt-28 pb-24 md:py-36">
           {/* Eyebrow */}
-          <motion.div
-            className="flex items-center gap-3 mb-5 md:mb-7"
+          {/* <motion.div
+            className="flex items-center gap-3 mb-3 md:mb-4"
             variants={fadeIn}
             initial="hidden"
             animate="visible"
@@ -105,6 +167,25 @@ export default function HeroSection() {
             />
             <p className="eyebrow" style={{ marginBottom: 0 }}>
               Precision Manufacturing
+            </p>
+          </motion.div> */}
+
+          {/* Typing text */}
+          <motion.div
+            className="mb-5 md:mb-7"
+            variants={fadeIn}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.25 }}
+          >
+            <p
+              className="font-display font-semibold"
+              style={{
+                fontSize: "clamp(0.95rem, 2vw, 1.25rem)",
+                letterSpacing: "0.02em",
+              }}
+            >
+              <TypingText />
             </p>
           </motion.div>
 
@@ -181,7 +262,7 @@ export default function HeroSection() {
             animate="visible"
             transition={{ delay: 0.85 }}
           >
-            {["ISO Certified", "200+ Clients", "Pan-India Delivery"].map(
+            {["ISO Certified", "60+ Clients", "Pan-India Delivery"].map(
               (badge, i) => (
                 <div key={badge} className="flex items-center gap-4">
                   <span

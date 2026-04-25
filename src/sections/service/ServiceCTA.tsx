@@ -108,9 +108,9 @@ export default function ServiceCTA() {
               <Button href="/contact" variant="primary" theme="light">
                 Raise a Service Request <FiArrowRight size={13} />
               </Button>
-              <Button href="/products" variant="outline" theme="light">
+              {/* <Button href="/products" variant="outline" theme="light">
                 Browse Spare Parts
-              </Button>
+              </Button> */}
             </motion.div>
           </div>
 

@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import Container from "@/components/ui/Container";
 import AnimatedLine from "@/components/ui/AnimatedLine";
 import { clipUp, fadeIn } from "@/lib/motion";
-import { FiArrowRight, FiSearch, FiTag, FiX } from "react-icons/fi";
+import { FiSearch, FiTag, FiX } from "react-icons/fi";
 import { getProducts, getProductCategories } from "@/services/product.service";
 import type { ApiProduct } from "@/types/products";
 import ProductCard from "./ProductCard";
@@ -115,7 +115,7 @@ export default function ProductsGrid() {
     <>
       {/* ── Hero ── */}
       <section
-        className="relative pt-40 pb-24 overflow-hidden"
+        className="relative pt-40 pb-24 overflow-hidden hidden"
         style={{ background: "var(--color-bg)" }}
       >
         {/* Grid bg */}
@@ -352,39 +352,6 @@ export default function ProductsGrid() {
               >
                 Clear filters
               </button>
-            </motion.div>
-          )}
-
-          {/* ── View all CTA ── */}
-          {!loading && filtered.length > 0 && (
-            <motion.div
-              className="text-center mt-12"
-              initial={{ opacity: 0, y: 16 }}
-              animate={gridInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              <Link
-                href="/products"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-sm font-display font-semibold uppercase tracking-wider text-sm transition-all duration-200 hover:gap-3"
-                style={{
-                  border: "1px solid var(--color-light-border)",
-                  color: "var(--color-light-muted)",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    "var(--color-light-accent)";
-                  (e.currentTarget as HTMLElement).style.color =
-                    "var(--color-light-accent)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    "var(--color-light-border)";
-                  (e.currentTarget as HTMLElement).style.color =
-                    "var(--color-light-muted)";
-                }}
-              >
-                View All Products <FiArrowRight size={13} />
-              </Link>
             </motion.div>
           )}
         </Container>

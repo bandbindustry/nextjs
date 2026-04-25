@@ -37,7 +37,7 @@ export default function ProductCard({ product, index }: Props) {
         href={`/products/${product.id}`}
         className="relative overflow-hidden block shrink-0"
         // style={{ aspectRatio: "3/4" }}
-         style={{ aspectRatio: "4/3" }} 
+        style={{ aspectRatio: "4/3" }}
         tabIndex={-1}
       >
         {firstImage ? (
@@ -46,7 +46,7 @@ export default function ProductCard({ product, index }: Props) {
             src={firstImage}
             alt={product.name}
             loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
+            className="w-full h-full object-contain transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]"
           />
         ) : (
           <div

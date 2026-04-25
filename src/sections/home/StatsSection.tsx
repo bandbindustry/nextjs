@@ -247,7 +247,10 @@ export default function StatsSection() {
       </div>
 
       {/* ── Map area — larger, unobstructed ── */}
-      <div className="relative overflow-hidden" style={{ minHeight: "560px" }}>
+      <div
+        className="relative hidden overflow-hidden"
+        style={{ minHeight: "560px" }}
+      >
         {/* Countries layer */}
         <div
           className="absolute inset-0 pointer-events-none"

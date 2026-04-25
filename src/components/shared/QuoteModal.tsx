@@ -580,6 +580,7 @@ export default function QuoteModal() {
     phone: "",
     city: "",
     state: "",
+    pincode: "",
     message: "",
   });
 
@@ -600,6 +601,7 @@ export default function QuoteModal() {
           phone: "",
           city: "",
           state: "",
+          pincode: "",
           message: "",
         });
       }, 350);
@@ -625,6 +627,7 @@ export default function QuoteModal() {
       subject: form.subject || undefined,
       city_name: form.city,
       state: form.state || undefined,
+      pincode: form.pincode || undefined,
       country_name: country?.value || "India",
       message: form.message || undefined,
     });
@@ -764,7 +767,7 @@ export default function QuoteModal() {
             {/* ── Location ── */}
             <SectionDivider label="Location" />
 
-            <motion.div variants={rowV} className="grid grid-cols-2 gap-3">
+            <motion.div variants={rowV} className="grid grid-cols-3 gap-3">
               <div>
                 <Label required icon={<FiMapPin size={9} />}>
                   City
@@ -786,6 +789,16 @@ export default function QuoteModal() {
                   value={form.state}
                   onChange={setField("state")}
                   autoComplete="address-level1"
+                />
+              </div>
+              <div>
+                <Label icon={<FiMapPin size={9} />}>Pincode</Label>
+                <Input
+                  name="pincode"
+                  placeholder="360001"
+                  value={form.pincode}
+                  onChange={setField("pincode")}
+                  autoComplete="postal-code"
                 />
               </div>
             </motion.div>

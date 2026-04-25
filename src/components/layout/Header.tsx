@@ -168,7 +168,7 @@ export default function Header() {
                   onMouseLeave={closeMega}
                   onClick={() => setMegaOpen((v) => !v)}
                   className={cn(
-                    "relative px-4 py-2 text-xs font-display uppercase tracking-widest transition-colors duration-200 flex items-center gap-1 cursor-pointer",
+                    "relative px-4 py-2 text-sm font-semibold font-display uppercase tracking-widest transition-colors duration-200 flex items-center gap-1 cursor-pointer",
                     isActive || megaOpen
                       ? lightHeader
                         ? "text-black font-semibold"
@@ -192,7 +192,7 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "px-4 py-2 text-xs font-display uppercase tracking-widest transition-colors duration-200",
+                    "px-4 py-2 text-sm font-semibold font-display uppercase tracking-widest transition-colors duration-200",
                     isActive
                       ? lightHeader
                         ? "text-black font-semibold"
@@ -523,7 +523,7 @@ export default function Header() {
                       href={link.href}
                       onClick={() => setMobileOpen(false)}
                       className={cn(
-                        "px-4 py-3 text-sm font-display uppercase tracking-widest rounded-sm transition-colors",
+                        "px-4 py-3 text-sm font-semibold font-display uppercase tracking-widest rounded-sm transition-colors",
                         pathname === link.href
                           ? "text-[var(--color-accent)]"
                           : "text-[var(--color-text-muted)]",
@@ -539,7 +539,7 @@ export default function Header() {
               <div className="mt-1">
                 <button
                   onClick={() => setMobileCatsOpen((v) => !v)}
-                  className="w-full flex items-center justify-between px-4 py-3 text-sm font-display uppercase tracking-widest transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold font-display uppercase tracking-widest transition-colors"
                   style={{
                     borderBottom: "1px solid var(--color-border)",
                     color: pathname.startsWith("/products")

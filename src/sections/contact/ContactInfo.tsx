@@ -25,7 +25,7 @@ export default function ContactInfo() {
       icon: FiPhone,
       label: "Phone",
       value: phone,
-      sub: "Mon–Sat, 9am–6pm IST",
+      // sub: "Mon–Sat, 9am–6pm IST",
     },
     {
       icon: FiMail,
@@ -42,49 +42,23 @@ export default function ContactInfo() {
   ];
 
   return (
-    <section className="section-pad" style={{ background: "var(--color-bg)" }}>
+    <section className="section-pad bg-black">
       <Container>
         {/* Info cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
           {info.map((item, i) => (
             <AnimatedSection key={item.label} delay={i * 0.1} direction="up">
-              <div
-                className="p-6 rounded-sm h-full"
-                style={{
-                  background: "var(--color-surface)",
-                  border: "1px solid var(--color-border)",
-                }}
-              >
-                <div
-                  className="w-10 h-10 rounded-sm flex items-center justify-center mb-4"
-                  style={{
-                    background: "var(--color-surface-2)",
-                    border: "1px solid var(--color-border)",
-                  }}
-                >
-                  <item.icon
-                    size={16}
-                    style={{ color: "var(--color-accent)" }}
-                  />
+              <div className="p-6 rounded-sm h-full bg-white border border-neutral-200 shadow-sm">
+                <div className="w-10 h-10 rounded-sm flex items-center justify-center mb-4 bg-black border border-neutral-200">
+                  <item.icon size={16} className="text-white" />
                 </div>
-                <p
-                  className="text-xs font-display uppercase tracking-widest mb-2"
-                  style={{ color: "var(--color-text-faint)" }}
-                >
+                <p className="text-xs font-display uppercase tracking-widest mb-2 text-neutral-400">
                   {item.label}
                 </p>
-                <p
-                  className="font-semibold text-base mb-1"
-                  style={{ color: "var(--color-text)" }}
-                >
+                <p className="font-semibold text-base mb-1 text-neutral-900">
                   {item.value}
                 </p>
-                <p
-                  className="text-base"
-                  style={{ color: "var(--color-text-faint)" }}
-                >
-                  {item.sub}
-                </p>
+                <p className="text-base text-neutral-500">{item.sub}</p>
               </div>
             </AnimatedSection>
           ))}

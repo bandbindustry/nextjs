@@ -46,7 +46,11 @@ function SkeletonCard() {
 }
 
 // ─── Main section ──────────────────────────────────────────────────────────────
-export default function ProductsGrid() {
+export default function ProductsGrid({
+  hideViewAll = false,
+}: {
+  hideViewAll?: boolean;
+}) {
   const gridRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(gridRef, { once: true, margin: "-80px 0px" });
@@ -216,36 +220,38 @@ export default function ProductsGrid() {
           </AnimatePresence>
         </motion.div>
 
-        {/* ── Bottom CTA ── */}
-        <motion.div
-          className="text-center mt-12"
-          variants={fadeUp}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          transition={{ delay: 0.4 }}
-        >
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold font-display uppercase tracking-wider rounded-sm transition-all duration-200 hover:gap-3"
-            style={{
-              border: "1px solid var(--color-light-border)",
-              color: "var(--color-light-muted)",
-              background: "var(--color-light-bg)",
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = "var(--color-light-accent)";
-              el.style.color = "var(--color-light-accent)";
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.borderColor = "var(--color-light-border)";
-              el.style.color = "var(--color-light-muted)";
-            }}
+        {/* ── Bottom CTA — hidden on the /products page itself ── */}
+        {!hideViewAll && (
+          <motion.div
+            className="text-center mt-12"
+            variants={fadeUp}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            transition={{ delay: 0.4 }}
           >
-            View All Products <FiArrowRight size={13} />
-          </Link>
-        </motion.div>
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold font-display uppercase tracking-wider rounded-sm transition-all duration-200 hover:gap-3"
+              style={{
+                border: "1px solid var(--color-light-border)",
+                color: "var(--color-light-muted)",
+                background: "var(--color-light-bg)",
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = "var(--color-light-accent)";
+                el.style.color = "var(--color-light-accent)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = "var(--color-light-border)";
+                el.style.color = "var(--color-light-muted)";
+              }}
+            >
+              View All Products <FiArrowRight size={13} />
+            </Link>
+          </motion.div>
+        )}
       </Container>
     </section>
   );

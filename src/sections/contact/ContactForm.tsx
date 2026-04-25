@@ -362,6 +362,7 @@ export default function ContactForm() {
     phone: "",
     city: "",
     state: "",
+    pincode: "",
     subject: "",
     message: "",
   });
@@ -384,6 +385,7 @@ export default function ContactForm() {
         subject: form.subject || undefined,
         city_name: form.city,
         state: form.state || undefined,
+        pincode: form.pincode || undefined,
         country_name: country?.value || "India",
         message: form.message || undefined,
       });
@@ -566,8 +568,8 @@ export default function ContactForm() {
                   </div>
                 </motion.div>
 
-                {/* City + State */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* City + State + Pincode */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <motion.div variants={fadeUp}>
                     <FieldLabel required>City</FieldLabel>
                     <FormInput
@@ -585,6 +587,15 @@ export default function ContactForm() {
                       placeholder="Gujarat"
                       value={form.state}
                       onChange={setField("state")}
+                    />
+                  </motion.div>
+                  <motion.div variants={fadeUp}>
+                    <FieldLabel>Pincode</FieldLabel>
+                    <FormInput
+                      name="pincode"
+                      placeholder="360001"
+                      value={form.pincode}
+                      onChange={setField("pincode")}
                     />
                   </motion.div>
                 </div>

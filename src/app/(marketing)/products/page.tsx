@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { createMetadata } from "@/lib/seo";
 import { ProductsGrid } from "@/sections/products";
+import ProductsHero from "@/sections/products/ProductsHero";
 
 export const metadata: Metadata = createMetadata({
   title: "Products",
@@ -22,6 +23,7 @@ export const metadata: Metadata = createMetadata({
 export default function ProductsPage() {
   return (
     <main>
+      <ProductsHero />
       <Suspense fallback={null}>
         <ProductsGrid />
       </Suspense>
