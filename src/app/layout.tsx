@@ -55,8 +55,11 @@ export const metadata: Metadata = {
     "Gujarat manufacturer",
     "B and B Industries",
   ],
-  authors: [{ name: siteConfig.name, url: siteConfig.url }],
-  creator: siteConfig.name,
+  authors: [
+    { name: siteConfig.name, url: siteConfig.url },
+    { name: "Vrushik Visavadiya", url: "https://www.vrushikvisavadiya.com/" },
+  ],
+  creator: "Vrushik Visavadiya",
   metadataBase: new URL(siteConfig.url),
   openGraph: {
     title: "B and B Industries — Precision Manufacturing",
@@ -101,6 +104,29 @@ export default function RootLayout({
         <QueryProvider>{children}</QueryProvider>
         <CookieProvider />
         <GoogleAnalytics />
+        {/* JSON-LD: WebSite schema with developer attribution */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "B and B Industries",
+              url: siteConfig.url,
+              description: siteConfig.description,
+              creator: {
+                "@type": "Person",
+                name: "Vrushik Visavadiya",
+                url: "https://www.vrushikvisavadiya.com/",
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "B and B Industries",
+                url: siteConfig.url,
+              },
+            }),
+          }}
+        />
       </body>
     </html>
   );

@@ -154,7 +154,7 @@ export default function Header() {
           </Link>
 
           {/* ── Desktop Nav ── */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => {
               const isProducts = link.label === "Products";
               const isActive = isProducts
@@ -209,7 +209,7 @@ export default function Header() {
           </nav>
 
           {/* ── CTA ── */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             {/* Sales email link */}
             {salesEmail && (
               <a
@@ -236,7 +236,7 @@ export default function Header() {
 
           {/* ── Mobile toggle ── */}
           <button
-            className="md:hidden p-2 transition-colors"
+            className="lg:hidden p-2 transition-colors"
             style={{ color: lightHeader ? "#000" : "var(--color-text)" }}
             onClick={() => setMobileOpen((v) => !v)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -274,7 +274,7 @@ export default function Header() {
         <AnimatePresence>
           {megaOpen && (
             <motion.div
-              className="hidden md:block absolute top-full left-0 right-0"
+              className="hidden lg:block absolute top-full left-0 right-0"
               style={{
                 background: "#fff",
                 borderTop: "1px solid #e5e5e5",
@@ -502,7 +502,7 @@ export default function Header() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            className="fixed inset-0 z-40 md:hidden pt-20 overflow-y-auto"
+            className="fixed inset-0 z-40 lg:hidden pt-20 overflow-y-auto"
             style={{ background: "var(--color-bg)" }}
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}

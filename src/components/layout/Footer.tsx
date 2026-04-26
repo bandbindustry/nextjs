@@ -481,7 +481,7 @@ export default function Footer() {
                 <Link
                   href="https://www.vrushikvisavadiya.com/"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="author noopener noreferrer"
                   className="font-semibold font-display transition-opacity duration-150 hover:opacity-75"
                   style={{ color: "var(--color-accent)" }}
                 >

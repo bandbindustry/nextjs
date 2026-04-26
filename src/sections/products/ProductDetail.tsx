@@ -529,7 +529,7 @@ export default function ProductDetail({ id }: { id: string }) {
                   </div>
 
                   {/* Name */}
-                  <h2
+                  <h1
                     className="font-display font-bold leading-tight"
                     style={{
                       fontSize: "clamp(1.5rem, 3vw, 2.2rem)",
@@ -537,7 +537,7 @@ export default function ProductDetail({ id }: { id: string }) {
                     }}
                   >
                     {product.name}
-                  </h2>
+                  </h1>
 
                   {/* Watt + price */}
                   <div className="flex items-center gap-3 flex-wrap">
