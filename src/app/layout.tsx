@@ -11,6 +11,7 @@ import {
 import "./globals.css";
 import CookieProvider from "@/components/ui/CookieProvider";
 import GoogleAnalytics from "@/components/shared/GoogleAnalytics";
+import MetaPixel from "@/components/shared/MetaPixel";
 import { siteConfig } from "@/config/site";
 import QueryProvider from "@/providers/QueryProvider";
 
@@ -104,6 +105,7 @@ export default function RootLayout({
         <QueryProvider>{children}</QueryProvider>
         <CookieProvider />
         <GoogleAnalytics />
+        <MetaPixel />
         {/* JSON-LD: WebSite schema with developer attribution */}
         <script
           type="application/ld+json"
