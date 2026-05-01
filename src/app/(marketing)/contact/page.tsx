@@ -7,9 +7,9 @@ import ContactInfo from "@/sections/contact/ContactInfo";
 export const metadata: Metadata = createMetadata({
   title: "Contact Us",
   description:
-    "Get in touch with B and B Industries for custom quotes, product inquiries, or after-sales support. Located in Jamnagar, Gujarat — serving clients across India and globally.",
+    "Get in touch with B&B Industries for custom quotes, product inquiries, or after-sales support. Located in Jamnagar, Gujarat — serving clients across India and globally.",
   keywords: [
-    "contact B and B Industries",
+    "contact B&B Industries",
     "industrial manufacturer contact",
     "get a quote Gujarat",
     "CNC machining inquiry",

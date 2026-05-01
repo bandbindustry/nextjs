@@ -45,10 +45,12 @@ export default function SitemapHero() {
               transition: "color 0.15s",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--color-text)";
+              (e.currentTarget as HTMLElement).style.color =
+                "var(--color-text)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--color-text-muted)";
+              (e.currentTarget as HTMLElement).style.color =
+                "var(--color-text-muted)";
             }}
           >
             Home
@@ -114,8 +116,8 @@ export default function SitemapHero() {
           animate="visible"
           transition={{ delay: 0.55 }}
         >
-          A complete overview of every page on the B and B Industries website —
-          from our products to support resources.
+          A complete overview of every page on the B&B Industries website — from
+          our products to support resources.
         </motion.p>
       </Container>
     </section>

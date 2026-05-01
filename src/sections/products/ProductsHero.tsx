@@ -15,7 +15,7 @@ export default function ProductsHero() {
       {/* Background image */}
       <Image
         src={BG_IMAGE}
-        alt="B and B Industries product range"
+        alt="B&B Industries product range"
         fill
         priority
         sizes="100vw"

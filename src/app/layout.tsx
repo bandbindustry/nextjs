@@ -12,6 +12,7 @@ import "./globals.css";
 import CookieProvider from "@/components/ui/CookieProvider";
 import GoogleAnalytics from "@/components/shared/GoogleAnalytics";
 import MetaPixel from "@/components/shared/MetaPixel";
+import SplashScreen from "@/components/shared/SplashScreen";
 import { siteConfig } from "@/config/site";
 import QueryProvider from "@/providers/QueryProvider";
 
@@ -44,17 +45,17 @@ const redHatDisplay = Red_Hat_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "B and B Industries — Precision Manufacturing",
-    template: "%s | B and B Industries",
+    default: "B&B Industries — Precision Manufacturing",
+    template: "%s | B&B Industries",
   },
   description:
-    "B and B Industries delivers world-class precision manufacturing, CNC machined components, and industrial machinery solutions across Gujarat and India.",
+    "B&B Industries delivers world-class precision manufacturing, CNC machined components, and industrial machinery solutions across Gujarat and India.",
   keywords: [
     "industrial manufacturing",
     "CNC machining",
     "precision parts",
     "Gujarat manufacturer",
-    "B and B Industries",
+    "B&B Industries",
   ],
   authors: [
     { name: siteConfig.name, url: siteConfig.url },
@@ -63,11 +64,11 @@ export const metadata: Metadata = {
   creator: "Vrushik Visavadiya",
   metadataBase: new URL(siteConfig.url),
   openGraph: {
-    title: "B and B Industries — Precision Manufacturing",
+    title: "B&B Industries — Precision Manufacturing",
     description:
       "Precision-engineered components and industrial machinery solutions from Jamnagar, Gujarat.",
     url: siteConfig.url,
-    siteName: "B and B Industries",
+    siteName: "B&B Industries",
     locale: "en_IN",
     type: "website",
     images: [
@@ -75,13 +76,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "B and B Industries — Precision Manufacturing",
+        alt: "B&B Industries — Precision Manufacturing",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "B and B Industries",
+    title: "B&B Industries",
     description:
       "Precision manufacturing and industrial solutions from Gujarat, India.",
     images: ["/og-image.png"],
@@ -102,6 +103,7 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${redHatDisplay.variable} font-body antialiased`}
       >
+        <SplashScreen />
         <QueryProvider>{children}</QueryProvider>
         <CookieProvider />
         <GoogleAnalytics />
@@ -113,7 +115,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              name: "B and B Industries",
+              name: "B&B Industries",
               url: siteConfig.url,
               description: siteConfig.description,
               creator: {
@@ -123,7 +125,7 @@ export default function RootLayout({
               },
               publisher: {
                 "@type": "Organization",
-                name: "B and B Industries",
+                name: "B&B Industries",
                 url: siteConfig.url,
               },
             }),

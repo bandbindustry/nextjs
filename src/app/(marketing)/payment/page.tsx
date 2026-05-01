@@ -7,7 +7,7 @@ import { getPaymentPolicy } from "@/services/legal.service";
 export const metadata: Metadata = createMetadata({
   title: "Payment, Pricing & Refund Policy",
   description:
-    "Pricing, payment terms, and refund conditions for B and B Industries.",
+    "Pricing, payment terms, and refund conditions for B&B Industries.",
   keywords: ["payment policy", "refund policy", "pricing terms India"],
   path: "/payment",
   noIndex: true,

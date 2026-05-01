@@ -29,13 +29,48 @@ const fadeUp = {
 };
 
 const staticPages = [
-  { label: "Home", href: "/", icon: FiHome, description: "Welcome to B and B Industries" },
-  { label: "About Us", href: "/about", icon: FiInfo, description: "Our story, team & certifications" },
-  { label: "Products", href: "/products", icon: FiPackage, description: "Full product catalog" },
-  { label: "Services", href: "/service", icon: FiTool, description: "After-sales support & service" },
-  { label: "Articles", href: "/blog", icon: FiFileText, description: "Industry insights & updates" },
-  { label: "FAQ", href: "/faq", icon: FiHelpCircle, description: "Frequently asked questions" },
-  { label: "Contact Us", href: "/contact", icon: FiMail, description: "Get in touch with us" },
+  {
+    label: "Home",
+    href: "/",
+    icon: FiHome,
+    description: "Welcome to B&B Industries",
+  },
+  {
+    label: "About Us",
+    href: "/about",
+    icon: FiInfo,
+    description: "Our story, team & certifications",
+  },
+  {
+    label: "Products",
+    href: "/products",
+    icon: FiPackage,
+    description: "Full product catalog",
+  },
+  {
+    label: "Services",
+    href: "/service",
+    icon: FiTool,
+    description: "After-sales support & service",
+  },
+  {
+    label: "Articles",
+    href: "/blog",
+    icon: FiFileText,
+    description: "Industry insights & updates",
+  },
+  {
+    label: "FAQ",
+    href: "/faq",
+    icon: FiHelpCircle,
+    description: "Frequently asked questions",
+  },
+  {
+    label: "Contact Us",
+    href: "/contact",
+    icon: FiMail,
+    description: "Get in touch with us",
+  },
 ];
 
 const legalPages = [
@@ -76,7 +111,12 @@ export default function SitemapContent({ products, categories }: Props) {
           <motion.div
             custom={0}
             variants={fadeUp}
-            style={{ marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.75rem" }}
+            style={{
+              marginBottom: "1.5rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.75rem",
+            }}
           >
             <span
               style={{
@@ -176,7 +216,10 @@ export default function SitemapContent({ products, categories }: Props) {
                         {page.description}
                       </p>
                     </div>
-                    <FiChevronRight size={14} color="var(--color-light-faint)" />
+                    <FiChevronRight
+                      size={14}
+                      color="var(--color-light-faint)"
+                    />
                   </Link>
                 </motion.div>
               );
@@ -194,7 +237,12 @@ export default function SitemapContent({ products, categories }: Props) {
           <motion.div
             custom={0}
             variants={fadeUp}
-            style={{ marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: "0.75rem" }}
+            style={{
+              marginBottom: "1.5rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.75rem",
+            }}
           >
             <span
               style={{
@@ -208,7 +256,13 @@ export default function SitemapContent({ products, categories }: Props) {
             >
               Products
             </span>
-            <div style={{ flex: 1, height: "1px", background: "var(--color-light-border)" }} />
+            <div
+              style={{
+                flex: 1,
+                height: "1px",
+                background: "var(--color-light-border)",
+              }}
+            />
             <Link
               href="/products"
               style={{
@@ -234,142 +288,160 @@ export default function SitemapContent({ products, categories }: Props) {
               No products found.
             </motion.p>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-              {Object.entries(productsByCategory).map(([catName, catProducts], catIdx) => (
-                <motion.div key={catName} custom={catIdx + 1} variants={fadeUp}>
-                  {/* Category header */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.625rem",
-                      marginBottom: "1rem",
-                    }}
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
+            >
+              {Object.entries(productsByCategory).map(
+                ([catName, catProducts], catIdx) => (
+                  <motion.div
+                    key={catName}
+                    custom={catIdx + 1}
+                    variants={fadeUp}
                   >
-                    <FiGrid size={13} color="var(--color-light-faint)" />
-                    <span
+                    {/* Category header */}
+                    <div
                       style={{
-                        fontFamily: "var(--font-display)",
-                        fontWeight: 700,
-                        fontSize: "0.85rem",
-                        color: "var(--color-light-text)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.625rem",
+                        marginBottom: "1rem",
                       }}
                     >
-                      {catName}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: "0.7rem",
-                        color: "var(--color-light-faint)",
-                        background: "var(--color-light-surface)",
-                        border: "1px solid var(--color-light-border)",
-                        borderRadius: "20px",
-                        padding: "1px 8px",
-                      }}
-                    >
-                      {catProducts.length}
-                    </span>
-                  </div>
+                      <FiGrid size={13} color="var(--color-light-faint)" />
+                      <span
+                        style={{
+                          fontFamily: "var(--font-display)",
+                          fontWeight: 700,
+                          fontSize: "0.85rem",
+                          color: "var(--color-light-text)",
+                        }}
+                      >
+                        {catName}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "0.7rem",
+                          color: "var(--color-light-faint)",
+                          background: "var(--color-light-surface)",
+                          border: "1px solid var(--color-light-border)",
+                          borderRadius: "20px",
+                          padding: "1px 8px",
+                        }}
+                      >
+                        {catProducts.length}
+                      </span>
+                    </div>
 
-                  {/* Product grid */}
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                      gap: "0.75rem",
-                    }}
-                  >
-                    {catProducts.map((product) => {
-                      const firstImage = product.images?.[0] ?? null;
-                      return (
-                        <Link
-                          key={product.id}
-                          href={`/products/${product.id}`}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.625rem",
-                            padding: "0.625rem 0.875rem",
-                            background: "var(--color-light-bg)",
-                            border: "1px solid var(--color-light-border)",
-                            borderRadius: "6px",
-                            color: "var(--color-light-text)",
-                            textDecoration: "none",
-                            fontSize: "0.8125rem",
-                            transition: "all 0.18s ease",
-                          }}
-                          onMouseEnter={(e) => {
-                            const el = e.currentTarget as HTMLElement;
-                            el.style.borderColor = "var(--color-light-accent)";
-                            el.style.background = "var(--color-light-surface)";
-                          }}
-                          onMouseLeave={(e) => {
-                            const el = e.currentTarget as HTMLElement;
-                            el.style.borderColor = "var(--color-light-border)";
-                            el.style.background = "var(--color-light-bg)";
-                          }}
-                        >
-                          {/* Thumbnail */}
-                          <div
+                    {/* Product grid */}
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns:
+                          "repeat(auto-fill, minmax(200px, 1fr))",
+                        gap: "0.75rem",
+                      }}
+                    >
+                      {catProducts.map((product) => {
+                        const firstImage = product.images?.[0] ?? null;
+                        return (
+                          <Link
+                            key={product.id}
+                            href={`/products/${product.id}`}
                             style={{
-                              width: 36,
-                              height: 36,
-                              borderRadius: "4px",
-                              overflow: "hidden",
-                              flexShrink: 0,
-                              background: "var(--color-light-surface)",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "0.625rem",
+                              padding: "0.625rem 0.875rem",
+                              background: "var(--color-light-bg)",
                               border: "1px solid var(--color-light-border)",
-                            }}
-                          >
-                            {firstImage ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={firstImage}
-                                alt={product.name}
-                                loading="lazy"
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  objectFit: "cover",
-                                }}
-                              />
-                            ) : (
-                              <div
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                <FiPackage size={14} color="var(--color-light-faint)" />
-                              </div>
-                            )}
-                          </div>
-                          <span
-                            style={{
-                              flex: 1,
-                              minWidth: 0,
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
+                              borderRadius: "6px",
                               color: "var(--color-light-text)",
-                              fontWeight: 500,
+                              textDecoration: "none",
+                              fontSize: "0.8125rem",
+                              transition: "all 0.18s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              const el = e.currentTarget as HTMLElement;
+                              el.style.borderColor =
+                                "var(--color-light-accent)";
+                              el.style.background =
+                                "var(--color-light-surface)";
+                            }}
+                            onMouseLeave={(e) => {
+                              const el = e.currentTarget as HTMLElement;
+                              el.style.borderColor =
+                                "var(--color-light-border)";
+                              el.style.background = "var(--color-light-bg)";
                             }}
                           >
-                            {product.name}
-                          </span>
-                          <FiArrowUpRight
-                            size={11}
-                            style={{ flexShrink: 0, color: "var(--color-light-faint)" }}
-                          />
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              ))}
+                            {/* Thumbnail */}
+                            <div
+                              style={{
+                                width: 36,
+                                height: 36,
+                                borderRadius: "4px",
+                                overflow: "hidden",
+                                flexShrink: 0,
+                                background: "var(--color-light-surface)",
+                                border: "1px solid var(--color-light-border)",
+                              }}
+                            >
+                              {firstImage ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  src={firstImage}
+                                  alt={product.name}
+                                  loading="lazy"
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              ) : (
+                                <div
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  <FiPackage
+                                    size={14}
+                                    color="var(--color-light-faint)"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                            <span
+                              style={{
+                                flex: 1,
+                                minWidth: 0,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                color: "var(--color-light-text)",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {product.name}
+                            </span>
+                            <FiArrowUpRight
+                              size={11}
+                              style={{
+                                flexShrink: 0,
+                                color: "var(--color-light-faint)",
+                              }}
+                            />
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                ),
+              )}
             </div>
           )}
         </motion.div>
@@ -383,7 +455,12 @@ export default function SitemapContent({ products, categories }: Props) {
           <motion.div
             custom={0}
             variants={fadeUp}
-            style={{ marginBottom: "1rem", display: "flex", alignItems: "center", gap: "0.75rem" }}
+            style={{
+              marginBottom: "1rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.75rem",
+            }}
           >
             <span
               style={{
@@ -397,7 +474,13 @@ export default function SitemapContent({ products, categories }: Props) {
             >
               Legal
             </span>
-            <div style={{ flex: 1, height: "1px", background: "var(--color-light-border)" }} />
+            <div
+              style={{
+                flex: 1,
+                height: "1px",
+                background: "var(--color-light-border)",
+              }}
+            />
           </motion.div>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>

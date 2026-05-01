@@ -16,7 +16,7 @@ export default function ContactHero() {
       {/* Background image */}
       <Image
         src={BG_IMAGE}
-        alt="Contact B and B Industries"
+        alt="Contact B&B Industries"
         fill
         priority
         sizes="100vw"

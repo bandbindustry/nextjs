@@ -3,7 +3,7 @@ import { siteConfig } from "@/config/site";
 
 // ─── Default keywords shared across all pages ───────────────────────────────
 const BASE_KEYWORDS = [
-  "B and B Industries",
+  "B&B Industries",
   "industrial manufacturing",
   "precision engineering",
   "CNC machining",
@@ -14,7 +14,7 @@ const BASE_KEYWORDS = [
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 export interface PageSeoProps {
-  /** Page title — will be formatted as "Title | B and B Industries" */
+  /** Page title — will be formatted as "Title | B&B Industries" */
   title: string;
   /** Page-specific meta description (max ~160 chars) */
   description: string;

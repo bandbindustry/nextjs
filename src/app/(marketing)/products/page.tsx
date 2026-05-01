@@ -7,7 +7,7 @@ import ProductsHero from "@/sections/products/ProductsHero";
 export const metadata: Metadata = createMetadata({
   title: "Products",
   description:
-    "Explore B and B Industries' full range of precision-engineered components, CNC machined parts, industrial machinery, custom fabrication, and assembly solutions.",
+    "Explore B&B Industries' full range of precision-engineered components, CNC machined parts, industrial machinery, custom fabrication, and assembly solutions.",
   keywords: [
     "precision components India",
     "CNC machined parts Gujarat",

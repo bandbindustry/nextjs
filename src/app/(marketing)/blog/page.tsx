@@ -7,14 +7,14 @@ import BlogHero from "@/sections/blog/BlogHero";
 export const metadata: Metadata = createMetadata({
   title: "Blog & Insights",
   description:
-    "Insights on precision manufacturing, CNC machining, quality systems, and industrial components from the B and B Industries engineering team.",
+    "Insights on precision manufacturing, CNC machining, quality systems, and industrial components from the B&B Industries engineering team.",
   keywords: [
     "manufacturing blog India",
     "CNC machining insights",
     "industrial engineering articles",
     "precision manufacturing tips",
     "quality control manufacturing",
-    "B and B Industries blog",
+    "B&B Industries blog",
   ],
   path: "/blog",
 });

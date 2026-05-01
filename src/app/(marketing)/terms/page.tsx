@@ -6,9 +6,9 @@ import { getTermsConditions } from "@/services/legal.service";
 export const metadata: Metadata = createMetadata({
   title: "Terms of Use",
   description:
-    "Read the terms and conditions governing your use of the B and B Industries website and services.",
+    "Read the terms and conditions governing your use of the B&B Industries website and services.",
   keywords: [
-    "B and B Industries terms of use",
+    "B&B Industries terms of use",
     "website terms and conditions",
     "legal terms India",
   ],

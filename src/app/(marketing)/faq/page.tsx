@@ -7,8 +7,8 @@ import { getFaqs } from "@/services/faq.service";
 export const metadata: Metadata = createMetadata({
   title: "Frequently Asked Questions",
   description:
-    "Find answers to common questions about B and B Industries — our products, processes, and policies.",
-  keywords: ["FAQ", "frequently asked questions", "B and B Industries support"],
+    "Find answers to common questions about B&B Industries — our products, processes, and policies.",
+  keywords: ["FAQ", "frequently asked questions", "B&B Industries support"],
   path: "/faq",
 });
 

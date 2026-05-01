@@ -88,7 +88,7 @@ export default function HeroBlackSection() {
           animate="visible"
           transition={{ delay: 0.55 }}
         >
-          B and B Industries delivers precision-engineered industrial solutions
+          B&B Industries delivers precision-engineered industrial solutions
           trusted across Gujarat and beyond.
         </motion.p>
 

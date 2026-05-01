@@ -6,9 +6,9 @@ import { getPrivacyPolicy } from "@/services/legal.service";
 export const metadata: Metadata = createMetadata({
   title: "Privacy Policy",
   description:
-    "Learn how B and B Industries collects, uses, and protects your personal information. We are committed to safeguarding your privacy.",
+    "Learn how B&B Industries collects, uses, and protects your personal information. We are committed to safeguarding your privacy.",
   keywords: [
-    "B and B Industries privacy policy",
+    "B&B Industries privacy policy",
     "data protection India",
     "personal information policy",
   ],

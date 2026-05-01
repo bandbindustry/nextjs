@@ -191,7 +191,7 @@ export default function AboutSnapshot() {
               className="leading-relaxed mb-5 text-base"
               style={{ color: "var(--color-light-muted)", maxWidth: "50ch" }}
             >
-              B and B Industries is a trusted name in industrial manufacturing,
+              B&B Industries is a trusted name in industrial manufacturing,
               delivering precision-engineered components and machinery solutions
               across Gujarat and beyond. From concept to production, we maintain
               uncompromising standards at every step.

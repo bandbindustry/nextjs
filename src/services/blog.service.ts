@@ -92,7 +92,7 @@ export function mapApiBlogToPost(blog: ApiBlog): BlogPost {
     title: blog.title,
     excerpt: blog.excerpt ?? "",
     publishedAt: blog.publish_date ?? new Date().toISOString(),
-    author: blog.author ?? "B and B Industries",
+    author: blog.author ?? "B&B Industries",
     category: blog.category_name ?? "General",
     coverImage: blog.icon ?? "/images/blog-placeholder.jpg",
     readingTime,

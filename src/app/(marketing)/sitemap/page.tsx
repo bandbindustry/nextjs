@@ -7,11 +7,11 @@ import SitemapContent from "@/sections/sitemap/SitemapContent";
 export const metadata: Metadata = createMetadata({
   title: "Sitemap",
   description:
-    "Browse the complete sitemap for B and B Industries — including all product pages, services, articles, and support resources.",
+    "Browse the complete sitemap for B&B Industries — including all product pages, services, articles, and support resources.",
   keywords: [
-    "B and B Industries sitemap",
+    "B&B Industries sitemap",
     "site map industrial manufacturer",
-    "all pages B and B",
+    "all pages B&B",
     "manufacturing website index",
   ],
   path: "/sitemap",

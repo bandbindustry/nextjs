@@ -2,10 +2,10 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandbindustry.com/";
 
 export const siteConfig = {
-  name: "B and B Industries",
+  name: "B&B Industries",
   tagline: "Precision in every cut",
   description:
-    "B and B Industries delivers world-class industrial manufacturing solutions, precision parts, and cutting-edge machinery.",
+    "B&B Industries delivers world-class industrial manufacturing solutions, precision parts, and cutting-edge machinery.",
   url: SITE_URL,
   contact: {
     email: "info@bandbindustries.com",

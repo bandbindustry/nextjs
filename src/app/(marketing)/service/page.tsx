@@ -14,7 +14,7 @@ import ServiceOnlineService from "@/sections/service/ServiceOnlineService";
 export const metadata: Metadata = createMetadata({
   title: "After-Sales Service & Support",
   description:
-    "24/7 support, 30-minute response time, regional service engineers, and a fully stocked spare parts warehouse. B and B Industries backs every product we make.",
+    "24/7 support, 30-minute response time, regional service engineers, and a fully stocked spare parts warehouse. B&B Industries backs every product we make.",
   keywords: [
     "industrial after-sales service",
     "CNC machine support India",
@@ -22,7 +22,7 @@ export const metadata: Metadata = createMetadata({
     "manufacturing support 24/7",
     "machine maintenance India",
     "industrial service engineers",
-    "B and B Industries service",
+    "B&B Industries service",
   ],
   path: "/service",
 });
