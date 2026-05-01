@@ -12,6 +12,7 @@ export default function ContactInfo() {
 
   const address = settings.contact_address || siteConfig.contact.address;
   const phone = settings.contact_phone_number || siteConfig.contact.phone;
+  const phone2 = settings.contact_phone_number_2 || "";
   const email = settings.contact_email || siteConfig.contact.email;
 
   const info = [
@@ -25,7 +26,7 @@ export default function ContactInfo() {
       icon: FiPhone,
       label: "Phone",
       value: phone,
-      // sub: "Mon–Sat, 9am–6pm IST",
+      sub: phone2 || undefined,
     },
     {
       icon: FiMail,

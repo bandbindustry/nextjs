@@ -103,6 +103,7 @@ export default function Footer() {
 
   const address = settings.contact_address || siteConfig.contact.address;
   const phone = settings.contact_phone_number || siteConfig.contact.phone;
+  const phone2 = settings.contact_phone_number_2 || "";
   const email = settings.contact_email || siteConfig.contact.email;
   const whatsapp =
     settings.whatsapp_phone_number ||
@@ -351,6 +352,15 @@ export default function Footer() {
                   href: `tel:${phone}`,
                   label: phone,
                 },
+                ...(phone2
+                  ? [
+                      {
+                        icon: <FiPhone size={14} />,
+                        href: `tel:${phone2}`,
+                        label: phone2,
+                      },
+                    ]
+                  : []),
                 {
                   icon: <FiMail size={14} />,
                   href: `mailto:${email}`,

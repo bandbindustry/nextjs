@@ -16,6 +16,7 @@ export interface SiteSettings {
   whatsapp_phone_number: string;
   contact_address: string;
   contact_phone_number: string;
+  contact_phone_number_2: string;
   contact_email: string;
   social_link_facebook: string;
   social_link_instagram: string;
@@ -32,6 +33,7 @@ export const SETTINGS_FALLBACK: SiteSettings = {
   whatsapp_phone_number: "",
   contact_address: "",
   contact_phone_number: "",
+  contact_phone_number_2: "",
   contact_email: "",
   social_link_facebook: "",
   social_link_instagram: "",
