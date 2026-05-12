@@ -8,6 +8,13 @@ import {
 import { createArticleMetadata } from "@/lib/seo";
 import BlogDetail from "@/sections/blog/BlogDetail";
 
+// Revalidate every 60 seconds (ISR) — updated posts reflect without a redeploy.
+export const revalidate = 60;
+
+// Allow slugs NOT in generateStaticParams to be rendered on-demand.
+// New blog posts added after the build will work immediately.
+export const dynamicParams = true;
+
 interface Props {
   params: Promise<{ slug: string }>;
 }

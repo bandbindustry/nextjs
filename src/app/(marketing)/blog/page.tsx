@@ -4,6 +4,10 @@ import { getAllPosts } from "@/services/blog.service";
 import BlogList from "@/sections/blog/BlogList";
 import BlogHero from "@/sections/blog/BlogHero";
 
+// Revalidate every 60 seconds (ISR) so new/updated blog posts appear
+// without requiring a full redeploy.
+export const revalidate = 60;
+
 export const metadata: Metadata = createMetadata({
   title: "Blog & Insights",
   description:
