@@ -16,7 +16,7 @@ import {
   RiArrowRightSLine,
   RiArrowDownSLine,
 } from "react-icons/ri";
-import { FiArrowRight, FiMail } from "react-icons/fi";
+import { FiArrowRight, FiTag, FiMail } from "react-icons/fi";
 import Button from "../ui/Button";
 import { getProductCategories, getProducts } from "@/services/product.service";
 import type { ApiProductCategory } from "@/types/products";
@@ -162,173 +162,31 @@ export default function Header() {
                 : pathname === link.href;
 
               return isProducts ? (
-                <div
+                <button
                   key={link.href}
-                  className="relative"
                   onMouseEnter={handleProductsEnter}
                   onMouseLeave={closeMega}
+                  onClick={() => setMegaOpen((v) => !v)}
+                  className={cn(
+                    "relative px-4 py-2 text-sm font-semibold font-display uppercase tracking-widest transition-colors duration-200 flex items-center gap-1 cursor-pointer",
+                    isActive || megaOpen
+                      ? lightHeader
+                        ? "text-black font-semibold"
+                        : "text-[var(--color-accent)]"
+                      : lightHeader
+                        ? "text-neutral-600 hover:text-black"
+                        : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
+                  )}
                 >
-                  {/* Products trigger button */}
-                  <button
-                    onClick={() => setMegaOpen((v) => !v)}
-                    className={cn(
-                      "relative px-4 py-2 text-sm font-semibold font-display uppercase tracking-widest transition-colors duration-200 flex items-center gap-1 cursor-pointer",
-                      isActive || megaOpen
-                        ? lightHeader
-                          ? "text-black font-semibold"
-                          : "text-[var(--color-accent)]"
-                        : lightHeader
-                          ? "text-neutral-600 hover:text-black"
-                          : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
-                    )}
+                  {link.label}
+                  <motion.span
+                    animate={{ rotate: megaOpen ? 180 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex"
                   >
-                    {link.label}
-                    <motion.span
-                      animate={{ rotate: megaOpen ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="flex"
-                    >
-                      <RiArrowDownSLine size={14} />
-                    </motion.span>
-                  </button>
-
-                  {/* ── Positioned Dropdown ── */}
-                  <AnimatePresence>
-                    {megaOpen && (
-                      <motion.div
-                        className="absolute top-full left-0 flex"
-                        style={{ zIndex: 100, marginTop: "6px" }}
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: 0.2, ease: EASE }}
-                      >
-                        {/* Categories panel */}
-                        <div
-                          className="w-72 bg-white shadow-2xl"
-                          style={{ borderTop: "3px solid var(--color-accent)" }}
-                        >
-                          {categories.map((cat) => {
-                            const isHovered = activeCategory?.id === cat.id;
-                            return (
-                              <button
-                                key={cat.id}
-                                className="w-full text-left px-6 py-4 font-display font-bold text-sm uppercase tracking-widest cursor-pointer flex items-center justify-between transition-all duration-150"
-                                style={{
-                                  borderBottom: "1px solid #f0f0f0",
-                                  color: isHovered ? "#000" : "#111",
-                                  background: isHovered
-                                    ? "#f5f5f5"
-                                    : "transparent",
-                                  borderLeft: isHovered
-                                    ? "3px solid var(--color-accent)"
-                                    : "3px solid transparent",
-                                }}
-                                onMouseEnter={() => setActiveCategory(cat)}
-                                onClick={() => {
-                                  setMegaOpen(false);
-                                  router.push(
-                                    `/products?category=${encryptUrlParam(cat.id)}`,
-                                  );
-                                }}
-                              >
-                                {cat.name}
-                                <RiArrowRightSLine
-                                  size={16}
-                                  style={{
-                                    color: isHovered
-                                      ? "var(--color-accent)"
-                                      : "#ccc",
-                                    flexShrink: 0,
-                                  }}
-                                />
-                              </button>
-                            );
-                          })}
-                          <div className="px-6 py-3">
-                            <Link
-                              href="/products"
-                              onClick={() => setMegaOpen(false)}
-                              className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-widest transition-opacity hover:opacity-75"
-                              style={{ color: "#666" }}
-                            >
-                              View All Products <FiArrowRight size={10} />
-                            </Link>
-                          </div>
-                        </div>
-
-                        {/* Product names sub-panel — only shown when a category is hovered */}
-                        <AnimatePresence mode="wait">
-                          {activeCategory && (
-                            <motion.div
-                              key={activeCategory.id}
-                              className="w-64 bg-white shadow-2xl"
-                              style={{
-                                borderTop: "3px solid var(--color-accent)",
-                                borderLeft: "1px solid #ececec",
-                              }}
-                              initial={{ opacity: 0, x: -4 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -4 }}
-                              transition={{ duration: 0.15, ease: EASE }}
-                            >
-                              {productsLoading ? (
-                                <div className="p-5 space-y-3">
-                                  {Array.from({ length: 5 }).map((_, i) => (
-                                    <div
-                                      key={i}
-                                      className="h-4 rounded animate-pulse"
-                                      style={{
-                                        background: "#f0f0f0",
-                                        width: `${50 + i * 9}%`,
-                                      }}
-                                    />
-                                  ))}
-                                </div>
-                              ) : categoryProducts.length === 0 ? (
-                                <p
-                                  className="px-5 py-4 text-sm"
-                                  style={{ color: "#999" }}
-                                >
-                                  No products found.
-                                </p>
-                              ) : (
-                                <>
-                                  {categoryProducts
-                                    .slice(0, 8)
-                                    .map((product) => (
-                                      <Link
-                                        key={product.id}
-                                        href={`/products/${product.id}`}
-                                        onClick={() => setMegaOpen(false)}
-                                        className="block px-5 py-3 text-sm font-display transition-colors hover:text-[var(--color-accent)] hover:bg-gray-50"
-                                        style={{
-                                          borderBottom: "1px solid #f5f5f5",
-                                          color: "#333",
-                                        }}
-                                      >
-                                        {product.name}
-                                      </Link>
-                                    ))}
-                                  <div className="px-5 py-3">
-                                    <Link
-                                      href={`/products?category=${encryptUrlParam(activeCategory.id)}`}
-                                      onClick={() => setMegaOpen(false)}
-                                      className="inline-flex items-center gap-1.5 text-xs font-display uppercase tracking-widest transition-opacity hover:opacity-75"
-                                      style={{ color: "var(--color-accent)" }}
-                                    >
-                                      View All <FiArrowRight size={10} />
-                                    </Link>
-                                  </div>
-                                </>
-                              )}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                    <RiArrowDownSLine size={14} />
+                  </motion.span>
+                </button>
               ) : (
                 <Link
                   key={link.href}
@@ -401,6 +259,243 @@ export default function Header() {
             </AnimatePresence>
           </button>
         </Container>
+
+        {/* ── Invisible hover bridge ── */}
+        {megaOpen && (
+          <div
+            className="absolute left-0 right-0 h-3"
+            style={{ top: "calc(100% - 4px)", zIndex: 1 }}
+            onMouseEnter={openMega}
+            onMouseLeave={closeMega}
+          />
+        )}
+
+        {/* ── Mega Menu ── */}
+        <AnimatePresence>
+          {megaOpen && (
+            <motion.div
+              className="hidden lg:block absolute top-full left-0 right-0"
+              style={{
+                background: "#fff",
+                borderTop: "1px solid #e5e5e5",
+                borderBottom: "1px solid #e5e5e5",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
+              }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.3, ease: EASE }}
+              onMouseEnter={openMega}
+              onMouseLeave={closeMega}
+            >
+              <Container className="py-8">
+                <div className="grid grid-cols-12 gap-8">
+                  {/* Left — category list */}
+                  <div className="col-span-5">
+                    <p
+                      className="text-[10px] font-display uppercase tracking-[0.2em] mb-4"
+                      style={{ color: "#999" }}
+                    >
+                      Product Categories
+                    </p>
+                    <ul className="space-y-1">
+                      {categories.map((cat, idx) => (
+                        <motion.li
+                          key={cat.id}
+                          initial={{ opacity: 0, x: -12 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{
+                            delay: 0.05 + idx * 0.04,
+                            duration: 0.3,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <button
+                            className="w-full text-left px-3 py-2.5 rounded-sm flex items-center justify-between transition-all duration-150 cursor-pointer"
+                            style={{
+                              background:
+                                effectiveCategory?.id === cat.id
+                                  ? "#000"
+                                  : "transparent",
+                              border:
+                                effectiveCategory?.id === cat.id
+                                  ? "1px solid #e5e5e5"
+                                  : "1px solid transparent",
+                            }}
+                            onMouseEnter={() => setActiveCategory(cat)}
+                            onClick={() => {
+                              setMegaOpen(false);
+                              router.push(
+                                `/products?category=${encryptUrlParam(cat.id)}`,
+                              );
+                            }}
+                          >
+                            <div>
+                              <p
+                                className="font-display font-semibold text-sm"
+                                style={{
+                                  color:
+                                    effectiveCategory?.id === cat.id
+                                      ? "var(--color-accent)"
+                                      : "#333",
+                                }}
+                              >
+                                {cat.name}
+                              </p>
+                              {cat.description && (
+                                <p
+                                  className="text-xs mt-0.5"
+                                  style={{ color: "#888" }}
+                                >
+                                  {cat.description}
+                                </p>
+                              )}
+                            </div>
+                            <RiArrowRightSLine
+                              size={16}
+                              style={{
+                                color:
+                                  effectiveCategory?.id === cat.id
+                                    ? "var(--color-accent)"
+                                    : "#bbb",
+                              }}
+                            />
+                          </button>
+                        </motion.li>
+                      ))}
+                    </ul>
+
+                    <div
+                      className="mt-4 pt-4"
+                      style={{ borderTop: "1px solid #e5e5e5" }}
+                    >
+                      <Link
+                        href="/products"
+                        className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-widest transition-colors hover:opacity-75"
+                        style={{ color: "var(--color-black)" }}
+                      >
+                        View All Products <FiArrowRight size={11} />
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Right — category products */}
+                  <div className="col-span-7">
+                    <AnimatePresence mode="wait">
+                      {effectiveCategory && (
+                        <motion.div
+                          key={effectiveCategory.id}
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 6 }}
+                          transition={{ duration: 0.2, ease: EASE }}
+                        >
+                          <p
+                            className="text-[10px] font-display uppercase tracking-[0.2em] mb-3"
+                            style={{ color: "#999" }}
+                          >
+                            {effectiveCategory.name}
+                          </p>
+
+                          {productsLoading ? (
+                            <div className="grid grid-cols-3 gap-3">
+                              {Array.from({ length: 6 }).map((_, i) => (
+                                <div
+                                  key={i}
+                                  className="rounded-sm animate-pulse"
+                                  style={{
+                                    background: "#f5f5f5",
+                                    aspectRatio: "4/3",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          ) : categoryProducts.length === 0 ? (
+                            <p
+                              className="text-sm py-4"
+                              style={{ color: "#999" }}
+                            >
+                              No products in this category.
+                            </p>
+                          ) : (
+                            <div className="grid grid-cols-3 gap-3">
+                              {categoryProducts.slice(0, 6).map((product) => (
+                                <Link
+                                  key={product.id}
+                                  href={`/products/${product.id}`}
+                                  onClick={() => setMegaOpen(false)}
+                                  className="group rounded-sm overflow-hidden transition-shadow duration-200 hover:shadow-md"
+                                  style={{ border: "1px solid #e5e5e5" }}
+                                >
+                                  <div
+                                    className="relative overflow-hidden"
+                                    style={{
+                                      aspectRatio: "4/3",
+                                      background: "#f5f5f5",
+                                    }}
+                                  >
+                                    {product.images?.[0] ? (
+                                      // eslint-disable-next-line @next/next/no-img-element
+                                      <img
+                                        src={product.images[0]}
+                                        alt={product.name}
+                                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                      />
+                                    ) : (
+                                      <div className="w-full h-full flex items-center justify-center">
+                                        <FiTag
+                                          size={20}
+                                          style={{ color: "#ccc" }}
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="px-2.5 py-2">
+                                    <p
+                                      className="text-xs font-display font-semibold leading-tight line-clamp-2 transition-colors group-hover:text-[var(--color-accent)]"
+                                      style={{ color: "#333" }}
+                                    >
+                                      {product.name}
+                                    </p>
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+
+                          <div
+                            className="mt-4 pt-3 flex items-center justify-between"
+                            style={{ borderTop: "1px solid #e5e5e5" }}
+                          >
+                            <Link
+                              href={`/products?category=${encryptUrlParam(effectiveCategory.id)}`}
+                              onClick={() => setMegaOpen(false)}
+                              className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-widest transition-opacity hover:opacity-75"
+                              style={{ color: "var(--color-accent)" }}
+                            >
+                              View All in {effectiveCategory.name}{" "}
+                              <FiArrowRight size={11} />
+                            </Link>
+                            <button
+                              onClick={openModal}
+                              className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-display uppercase tracking-widest rounded-sm transition-opacity duration-200 hover:opacity-85"
+                              style={{
+                                background: "var(--color-accent)",
+                                color: "#fff",
+                              }}
+                            >
+                              Get a Quote
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+              </Container>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.header>
 
       {/* ── Mobile Menu ── */}
